@@ -43,22 +43,17 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Import order processor
-    const { orderProcessor } = await import("@/lib/order-processor")
+    // Import internal order processor
+    const { internalOrderProcessor } = await import("@/lib/internal-order-processor")
 
-    // Add order to processing queue
+    // Add order to internal processing queue
     try {
-      if (process.env.ORDER_QUEUE_ENABLED === 'true') {
-        await orderProcessor.addToQueue(order.id)
-      } else {
-        // Process immediately if queue is disabled
-        await orderProcessor.processOrder(order.id)
-      }
+      await internalOrderProcessor.addToQueue(order.id, 1) // Priority 1 for new orders
 
       return NextResponse.json({ 
         success: true, 
         orderId: order.id,
-        message: "Order placed successfully and queued for processing" 
+        message: "Order placed successfully and queued for internal processing" 
       })
     } catch (processingError) {
       console.error("Order processing failed:", processingError)
