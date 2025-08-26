@@ -1,16 +1,18 @@
+
 "use client"
 
 import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { TrendingUp, Plus, Shield, Zap, Clock } from "lucide-react"
 import Link from "next/link"
-import { isAdmin } from "@/lib/admin"
-import { currentUser } from "@clerk/nextjs/server"
 import { DashboardHeaderClient } from "./dashboard-header-client"
 import { useEffect, useState } from "react"
 
 interface DashboardHeaderProps {
   user: any
+  showAdminPanel: boolean
+  userId?: string
+  accounts: any[]
 }
 
 function ClientUserButton() {
@@ -35,12 +37,7 @@ function ClientUserButton() {
   )
 }
 
-export async function DashboardHeader({ user }: DashboardHeaderProps) {
-  const clerkUser = await currentUser()
-  const showAdminPanel = clerkUser && isAdmin(clerkUser.id)
-  const userId = clerkUser?.id
-  const accounts = user?.accounts || []
-
+export function DashboardHeader({ user, showAdminPanel, userId, accounts }: DashboardHeaderProps) {
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">

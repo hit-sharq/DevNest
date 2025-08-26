@@ -6,6 +6,7 @@ import { StatsCards } from "@/components/dashboard/stats-cards"
 import { CampaignsList } from "@/components/dashboard/campaigns-list"
 import { AnalyticsChart } from "@/components/dashboard/analytics-chart"
 import { InstagramAccounts } from "@/components/dashboard/instagram-accounts"
+import { isAdmin } from "@/lib/admin"
 
 export default async function DashboardPage() {
   const user = await currentUser()
@@ -45,9 +46,16 @@ export default async function DashboardPage() {
     },
   })
 
+  const showAdminPanel = isAdmin(user.id)
+
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader user={dbUser} />
+      <DashboardHeader 
+        user={dbUser} 
+        showAdminPanel={showAdminPanel}
+        userId={user.id}
+        accounts={dbUser.instagramAccounts}
+      />
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         <div className="animate-fade-in-up">
