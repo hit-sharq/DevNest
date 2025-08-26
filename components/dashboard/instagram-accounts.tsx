@@ -1,7 +1,11 @@
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Plus, Instagram } from "lucide-react"
+import { ConnectAccountModal } from "@/components/instagram/connect-account-modal"
 
 interface InstagramAccountsProps {
   accounts: any[]
@@ -9,6 +13,12 @@ interface InstagramAccountsProps {
 }
 
 export function InstagramAccounts({ accounts, userId }: InstagramAccountsProps) {
+  const [showConnectModal, setShowConnectModal] = useState(false)
+
+  const handleAccountAdded = () => {
+    // Refresh the page to show the new account
+    window.location.reload()
+  }
   return (
     <Card className="animate-slide-in-right">
       <CardHeader>
@@ -23,7 +33,10 @@ export function InstagramAccounts({ accounts, userId }: InstagramAccountsProps) 
           <div className="text-center py-6">
             <Instagram className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground mb-4">No accounts connected</p>
-            <Button className="bg-accent hover:bg-accent/90">
+            <Button 
+              onClick={() => setShowConnectModal(true)}
+              className="bg-accent hover:bg-accent/90"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Connect Account
             </Button>
@@ -45,13 +58,25 @@ export function InstagramAccounts({ accounts, userId }: InstagramAccountsProps) 
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="w-full bg-transparent">
+            <Button 
+              variant="outline" 
+              className="w-full bg-transparent"
+              onClick={() => setShowConnectModal(true)}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add Another Account
             </Button>
           </div>
         )}
       </CardContent>
+      
+      {showConnectModal && (
+        <ConnectAccountModal
+          userId={userId}
+          onClose={() => setShowConnectModal(false)}
+          onAccountAdded={handleAccountAdded}
+        />
+      )}
     </Card>
   )
 }
