@@ -1,0 +1,67 @@
+
+Unhandled Runtime Error
+
+Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+See more info here: https://nextjs.org/docs/messages/react-hydration-error
+
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/dashboard" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>
+            <DashboardPage>
+              <div className="min-h-scre...">
+                <DashboardHeader>
+                  <header className="border-b b...">
+                    <div className="container ...">
+                      <div className="flex items...">
+                        <div>
+                        <div className="flex items...">
+                          <DashboardHeaderClient>
+                          <withClerk(UserButton) appearance={{elements:{...}}}>
+                            <UserButton appearance={{elements:{...}}} component="UserButton" clerk={{clerkjs:{...}, ...}}>
+                              <ClerkHostRenderer component="UserButton" mount={function} unmount={function} ...>
++                               <div ref={{current:null}} data-clerk-component="UserButton">
+                                ...
+                ...
+            ...
+components/dashboard/dashboard-header.tsx (57:13) @ DashboardHeader
+
+
+  55 |           <div className="flex items-center space-x-4">
+  56 |             <DashboardHeaderClient accounts={accounts} userId={userId} />
+> 57 |             <UserButton
+     |             ^
+  58 |               appearance={{
+  59 |                 elements: {
+  60 |                   avatarBox: "w-8 h-8",
+Call Stack
+17
+
+Show 14 ignore-listed frame(s)
+div
+<anonymous> (0:0)
+DashboardHeader
+components/dashboard/dashboard-header.tsx (57:13)
+DashboardPage
+app/dashboard/page.tsx (50:7)
+Was this helpful?
+
+
+
+1
+2
+
+2/2
+
+Next.js 15.2.4 (stale)
