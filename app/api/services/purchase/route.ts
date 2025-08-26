@@ -43,26 +43,38 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Here you would integrate with your payment processor
-    // For now, we'll simulate a successful payment
-    
-    // Update order status to processing
-    await prisma.serviceOrder.update({
-      where: { id: order.id },
-      data: { status: "processing" },
-    })
+    // Import order processor
+    const { orderProcessor } = await import("@/lib/order-processor")
 
-    // In a real implementation, you would:
-    // 1. Process payment through Stripe/PayPal
-    // 2. Queue the service delivery
-    // 3. Update delivery status
-    // 4. Send confirmation emails
+    // Add order to processing queue
+    try {
+      if (process.env.ORDER_QUEUE_ENABLED === 'true') {
+        await orderProcessor.addToQueue(order.id)
+      } else {
+        // Process immediately if queue is disabled
+        await orderProcessor.processOrder(order.id)
+      }
 
-    return NextResponse.json({ 
-      success: true, 
-      orderId: order.id,
-      message: "Order placed successfully" 
-    })
+      return NextResponse.json({ 
+        success: true, 
+        orderId: order.id,
+        message: "Order placed successfully and queued for processing" 
+      })
+    } catch (processingError) {
+      console.error("Order processing failed:", processingError)
+      
+      // Update order status to failed
+      await prisma.serviceOrder.update({
+        where: { id: order.id },
+        data: { status: "failed" },
+      })
+
+      return NextResponse.json({ 
+        success: false, 
+        orderId: order.id,
+        error: "Order created but processing failed. Please contact support." 
+      }, { status: 500 })
+    }
 
   } catch (error) {
     console.error("Service purchase error:", error)

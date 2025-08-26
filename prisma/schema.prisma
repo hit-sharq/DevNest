@@ -177,8 +177,14 @@ model ServiceOrder {
   targetCountry String? // Geographic targeting
   
   // Provider info
-  providerId    String? // External service provider ID
+  providerId    String? // Which SMM provider was used
   providerOrderId String? // Provider's order reference
+  providerStatus String? // Raw status from provider
+  
+  // Quality control
+  retentionRate Float? // Percentage of delivered items retained after 7 days
+  refillCount   Int @default(0) // Number of times order was refilled
+  lastStatusCheck DateTime? // Last time status was checked with provider
 
   user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account InstagramAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
