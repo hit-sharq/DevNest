@@ -14,9 +14,21 @@ export default async function DashboardPage() {
     redirect("/sign-in")
   }
 
-  // Get or create user in database
-  let dbUser = await prisma.user.findUnique({
+  const dbUser = await prisma.user.upsert({
     where: { clerkId: user.id },
+    update: {
+      email: user.emailAddresses[0]?.emailAddress || "",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
+    create: {
+      clerkId: user.id,
+      email: user.emailAddresses[0]?.emailAddress || "",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
     include: {
       instagramAccounts: {
         include: {
@@ -32,32 +44,6 @@ export default async function DashboardPage() {
       },
     },
   })
-
-  if (!dbUser) {
-    dbUser = await prisma.user.create({
-      data: {
-        clerkId: user.id,
-        email: user.emailAddresses[0]?.emailAddress || "",
-        firstName: user.firstName,
-        lastName: user.lastName,
-        imageUrl: user.imageUrl,
-      },
-      include: {
-        instagramAccounts: {
-          include: {
-            campaigns: true,
-            followers: true,
-          },
-        },
-        campaigns: {
-          include: {
-            account: true,
-            actions: true,
-          },
-        },
-      },
-    })
-  }
 
   return (
     <div className="min-h-screen bg-background">
