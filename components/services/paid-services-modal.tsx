@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Users, Heart, MessageCircle, Loader2, Instagram, Zap } from "lucide-react"
+import { Users, Heart, MessageCircle, Loader2, Instagram, Zap, Eye, Play } from "lucide-react"
 
 interface PaidServicesModalProps {
   accounts: any[]
@@ -33,11 +33,12 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: Users,
       color: "text-blue-600",
       packages: [
-        { quantity: 100, price: 2.99, delivery: "1-6 hours", quality: "High Quality" },
-        { quantity: 500, price: 12.99, delivery: "1-12 hours", quality: "High Quality" },
-        { quantity: 1000, price: 24.99, delivery: "1-24 hours", quality: "Premium" },
-        { quantity: 2500, price: 59.99, delivery: "1-3 days", quality: "Premium" },
-        { quantity: 5000, price: 109.99, delivery: "2-5 days", quality: "Premium" },
+        { quantity: 100, price: 2.99, delivery: "1-6 hours", quality: "High Quality", retention: "90-95%", source: "Global Mix" },
+        { quantity: 500, price: 12.99, delivery: "1-12 hours", quality: "High Quality", retention: "90-95%", source: "Global Mix" },
+        { quantity: 1000, price: 24.99, delivery: "1-24 hours", quality: "Premium", retention: "95-98%", source: "Targeted" },
+        { quantity: 2500, price: 59.99, delivery: "1-3 days", quality: "Premium", retention: "95-98%", source: "Targeted" },
+        { quantity: 5000, price: 109.99, delivery: "2-5 days", quality: "Premium", retention: "95-98%", source: "Premium Mix" },
+        { quantity: 10000, price: 199.99, delivery: "3-7 days", quality: "Premium", retention: "98%+", source: "Premium Mix" },
       ]
     },
     likes: {
@@ -45,11 +46,12 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: Heart,
       color: "text-red-600",
       packages: [
-        { quantity: 100, price: 1.99, delivery: "5-30 mins", quality: "High Quality" },
-        { quantity: 500, price: 7.99, delivery: "10-60 mins", quality: "High Quality" },
-        { quantity: 1000, price: 14.99, delivery: "30-120 mins", quality: "Premium" },
-        { quantity: 2500, price: 34.99, delivery: "1-6 hours", quality: "Premium" },
-        { quantity: 5000, price: 64.99, delivery: "2-12 hours", quality: "Premium" },
+        { quantity: 100, price: 1.99, delivery: "5-30 mins", quality: "High Quality", retention: "No Drop", source: "Instant" },
+        { quantity: 500, price: 7.99, delivery: "10-60 mins", quality: "High Quality", retention: "No Drop", source: "Instant" },
+        { quantity: 1000, price: 14.99, delivery: "30-120 mins", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 2500, price: 34.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 5000, price: 64.99, delivery: "2-12 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 10000, price: 119.99, delivery: "6-24 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
       ]
     },
     comments: {
@@ -57,10 +59,36 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: MessageCircle,
       color: "text-green-600",
       packages: [
-        { quantity: 10, price: 4.99, delivery: "1-6 hours", quality: "Custom" },
-        { quantity: 25, price: 11.99, delivery: "2-12 hours", quality: "Custom" },
-        { quantity: 50, price: 22.99, delivery: "6-24 hours", quality: "Custom" },
-        { quantity: 100, price: 42.99, delivery: "12-48 hours", quality: "Custom" },
+        { quantity: 10, price: 4.99, delivery: "1-6 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
+        { quantity: 25, price: 11.99, delivery: "2-12 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
+        { quantity: 50, price: 22.99, delivery: "6-24 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
+        { quantity: 100, price: 42.99, delivery: "12-48 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
+        { quantity: 250, price: 99.99, delivery: "1-3 days", quality: "Premium Custom", retention: "Permanent", source: "Native Speakers" },
+      ]
+    },
+    views: {
+      name: "Views",
+      icon: Eye,
+      color: "text-purple-600",
+      packages: [
+        { quantity: 1000, price: 0.99, delivery: "1-30 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
+        { quantity: 5000, price: 3.99, delivery: "30-120 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
+        { quantity: 10000, price: 6.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 25000, price: 14.99, delivery: "6-24 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 50000, price: 24.99, delivery: "12-48 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 100000, price: 44.99, delivery: "1-3 days", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+      ]
+    },
+    story_views: {
+      name: "Story Views",
+      icon: Play,
+      color: "text-orange-600",
+      packages: [
+        { quantity: 100, price: 1.99, delivery: "5-30 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
+        { quantity: 500, price: 7.99, delivery: "10-60 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
+        { quantity: 1000, price: 14.99, delivery: "30-120 mins", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 2500, price: 29.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 5000, price: 54.99, delivery: "2-12 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
       ]
     }
   }
@@ -150,18 +178,26 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
           </div>
 
           <Tabs value={selectedService} onValueChange={setSelectedService} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="followers" className="flex items-center space-x-2">
-                <Users className="w-4 h-4" />
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="followers" className="flex items-center space-x-1 text-xs">
+                <Users className="w-3 h-3" />
                 <span>Followers</span>
               </TabsTrigger>
-              <TabsTrigger value="likes" className="flex items-center space-x-2">
-                <Heart className="w-4 h-4" />
+              <TabsTrigger value="likes" className="flex items-center space-x-1 text-xs">
+                <Heart className="w-3 h-3" />
                 <span>Likes</span>
               </TabsTrigger>
-              <TabsTrigger value="comments" className="flex items-center space-x-2">
-                <MessageCircle className="w-4 h-4" />
+              <TabsTrigger value="comments" className="flex items-center space-x-1 text-xs">
+                <MessageCircle className="w-3 h-3" />
                 <span>Comments</span>
+              </TabsTrigger>
+              <TabsTrigger value="views" className="flex items-center space-x-1 text-xs">
+                <Eye className="w-3 h-3" />
+                <span>Views</span>
+              </TabsTrigger>
+              <TabsTrigger value="story_views" className="flex items-center space-x-1 text-xs">
+                <Play className="w-3 h-3" />
+                <span>Story Views</span>
               </TabsTrigger>
             </TabsList>
 
@@ -187,8 +223,8 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
                           <div className="space-y-1 text-xs">
                             <div>⚡ {pkg.delivery}</div>
                             <div>✨ {pkg.quality}</div>
-                            <div>🔒 Safe & Secure</div>
-                            <div>📈 Instant Boost</div>
+                            <div>🔄 {pkg.retention}</div>
+                            <div>🌍 {pkg.source}</div>
                           </div>
                         </CardDescription>
                       </CardHeader>

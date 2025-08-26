@@ -162,13 +162,23 @@ model ServiceOrder {
   id          String   @id @default(cuid())
   userId      String
   accountId   String
-  serviceType String   // "followers", "likes", "comments"
+  serviceType String   // "followers", "likes", "comments", "views", "story_views"
   quantity    Int
+  delivered   Int      @default(0) // Delivered amount
   price       Float
   postUrl     String?  // For likes and comments
-  status      String   @default("pending") // "pending", "processing", "completed", "failed"
+  status      String   @default("pending") // "pending", "processing", "completed", "failed", "partial"
   orderDate   DateTime @default(now())
-  completedAt DateTime?
+  startedAt   DateTime? // When delivery started
+  completedAt DateTime? // When delivery completed
+  
+  // Delivery settings
+  deliverySpeed String @default("normal") // "slow", "normal", "fast"
+  targetCountry String? // Geographic targeting
+  
+  // Provider info
+  providerId    String? // External service provider ID
+  providerOrderId String? // Provider's order reference
 
   user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account InstagramAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)

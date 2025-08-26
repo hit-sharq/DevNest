@@ -1,9 +1,12 @@
 import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, Plus, Shield, Zap } from "lucide-react"
+import { TrendingUp, Plus, Shield, Zap, Clock } from "lucide-react"
 import Link from "next/link"
 import { isAdmin } from "@/lib/admin"
 import { currentUser } from "@clerk/nextjs/server"
+import { PaidServicesModal } from "@/components/services/paid-services-modal"
+import { OrderHistoryModal } from "@/components/services/order-history-modal"
+import { useState } from "react"
 
 interface DashboardHeaderProps {
   user: any
@@ -12,6 +15,12 @@ interface DashboardHeaderProps {
 export async function DashboardHeader({ user }: DashboardHeaderProps) {
   const clerkUser = await currentUser()
   const showAdminPanel = clerkUser && isAdmin(clerkUser.id)
+  const userId = clerkUser?.id
+  const accounts = user?.accounts || []
+
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showPaidServices, setShowPaidServices] = useState(false)
+  const [showOrderHistory, setShowOrderHistory] = useState(false)
 
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
@@ -54,10 +63,22 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
               <Plus className="w-4 h-4 mr-2" />
               Create Campaign
             </Button>
-            <Button onClick={() => setShowServicesModal(true)} variant="outline" className="border-accent text-accent hover:bg-accent/10">
-              <Zap className="w-4 h-4 mr-2" />
-              Boost Posts
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                onClick={() => setShowOrderHistory(true)}
+                variant="outline"
+              >
+                <Clock className="w-4 h-4 mr-2" />
+                Order History
+              </Button>
+              <Button
+                onClick={() => setShowPaidServices(true)}
+                className="bg-accent hover:bg-accent/90"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Boost Services
+              </Button>
+            </div>
             <UserButton
               appearance={{
                 elements: {
@@ -68,6 +89,20 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
           </div>
         </div>
       </div>
+      {showPaidServices && (
+        <PaidServicesModal
+          accounts={accounts}
+          userId={userId}
+          onClose={() => setShowPaidServices(false)}
+        />
+      )}
+
+      {showOrderHistory && (
+        <OrderHistoryModal
+          userId={userId}
+          onClose={() => setShowOrderHistory(false)}
+        />
+      )}
     </header>
   )
 }
