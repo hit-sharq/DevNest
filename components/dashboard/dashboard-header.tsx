@@ -1,6 +1,6 @@
 import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, Plus, Shield } from "lucide-react"
+import { TrendingUp, Plus, Shield, Zap } from "lucide-react"
 import Link from "next/link"
 import { isAdmin } from "@/lib/admin"
 import { currentUser } from "@clerk/nextjs/server"
@@ -50,9 +50,13 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button className="bg-accent hover:bg-accent/90">
+            <Button onClick={() => setShowCreateModal(true)} className="bg-accent hover:bg-accent/90">
               <Plus className="w-4 h-4 mr-2" />
-              New Campaign
+              Create Campaign
+            </Button>
+            <Button onClick={() => setShowServicesModal(true)} variant="outline" className="border-accent text-accent hover:bg-accent/10">
+              <Zap className="w-4 h-4 mr-2" />
+              Boost Posts
             </Button>
             <UserButton
               appearance={{

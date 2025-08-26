@@ -8,52 +8,54 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String   @unique
-  firstName String?
-  lastName  String?
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String             @id @default(cuid())
+  clerkId           String             @unique
+  email             String             @unique
+  firstName         String?
+  lastName          String?
+  imageUrl          String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
-  role      String   @default("user") // user, admin, super_admin
+  role              String             @default("user") // user, admin, super_admin
 
   // Subscription info
   subscriptionId     String?
   subscriptionStatus String?
-  planType          String   @default("free") // free, basic, pro, enterprise
-  
+  planType          String             @default("free") // free, basic, pro, enterprise
+
   // Instagram accounts
   instagramAccounts InstagramAccount[]
-  
+
   // Campaigns
-  campaigns Campaign[]
-  
+  campaigns ServiceOrder[]
+
   // Analytics
   analytics UserAnalytics[]
+  serviceOrders     ServiceOrder[]
 
   @@map("users")
 }
 
 model InstagramAccount {
-  id          String   @id @default(cuid())
-  userId      String
-  username    String
-  displayName String?
-  bio         String?
-  profilePic  String?
-  followersCount Int   @default(0)
-  followingCount Int   @default(0)
-  postsCount     Int   @default(0)
-  isActive       Boolean @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             String         @id @default(cuid())
+  userId         String
+  username       String
+  displayName    String?
+  bio            String?
+  profilePic     String?
+  followersCount Int            @default(0)
+  followingCount Int            @default(0)
+  postsCount     Int            @default(0)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  campaigns Campaign[]
-  followers Follower[]
-  analytics AccountAnalytics[]
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaigns      Campaign[]
+  followers      Follower[]
+  analytics      AccountAnalytics[]
+  serviceOrders  ServiceOrder[]
 
   @@map("instagram_accounts")
 }
@@ -67,19 +69,19 @@ model Campaign {
   status      String   @default("active") // active, paused, completed
   targetType  String   // hashtag, location, competitor
   targetValue String   // actual hashtag, location name, competitor username
-  
+
   // Campaign settings
   dailyFollowLimit    Int @default(50)
   dailyUnfollowLimit  Int @default(30)
   dailyLikeLimit      Int @default(100)
   dailyCommentLimit   Int @default(20)
-  
+
   // Results
   totalFollowsGained  Int @default(0)
   totalUnfollows      Int @default(0)
   totalLikes          Int @default(0)
   totalComments       Int @default(0)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -124,7 +126,7 @@ model UserAnalytics {
   id     String   @id @default(cuid())
   userId String
   date   DateTime @default(now())
-  
+
   // Daily metrics
   totalFollowers    Int @default(0)
   followersGained   Int @default(0)
@@ -132,7 +134,7 @@ model UserAnalytics {
   totalCampaigns    Int @default(0)
   activeCampaigns   Int @default(0)
   totalActions      Int @default(0)
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
@@ -143,15 +145,33 @@ model AccountAnalytics {
   id        String   @id @default(cuid())
   accountId String
   date      DateTime @default(now())
-  
+
   // Daily account metrics
   followers    Int @default(0)
   following    Int @default(0)
   posts        Int @default(0)
   engagement   Float @default(0)
-  
+
   account InstagramAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@unique([accountId, date])
   @@map("account_analytics")
+}
+
+model ServiceOrder {
+  id          String   @id @default(cuid())
+  userId      String
+  accountId   String
+  serviceType String   // "followers", "likes", "comments"
+  quantity    Int
+  price       Float
+  postUrl     String?  // For likes and comments
+  status      String   @default("pending") // "pending", "processing", "completed", "failed"
+  orderDate   DateTime @default(now())
+  completedAt DateTime?
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account InstagramAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("service_orders")
 }
