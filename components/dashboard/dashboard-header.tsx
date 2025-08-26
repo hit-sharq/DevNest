@@ -1,3 +1,5 @@
+"use client"
+
 import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { TrendingUp, Plus, Shield, Zap, Clock } from "lucide-react"
@@ -5,9 +7,32 @@ import Link from "next/link"
 import { isAdmin } from "@/lib/admin"
 import { currentUser } from "@clerk/nextjs/server"
 import { DashboardHeaderClient } from "./dashboard-header-client"
+import { useEffect, useState } from "react"
 
 interface DashboardHeaderProps {
   user: any
+}
+
+function ClientUserButton() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+  }
+
+  return (
+    <UserButton
+      appearance={{
+        elements: {
+          avatarBox: "w-8 h-8",
+        },
+      }}
+    />
+  )
 }
 
 export async function DashboardHeader({ user }: DashboardHeaderProps) {
@@ -54,13 +79,7 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
 
           <div className="flex items-center space-x-4">
             <DashboardHeaderClient accounts={accounts} userId={userId} />
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
+            <ClientUserButton />
           </div>
         </div>
       </div>
