@@ -1,5 +1,5 @@
-
-import { prisma } from './prisma'
+import { prisma } from "./prisma"
+import { PasswordManager } from "./crypto"
 
 export interface BotAccount {
   id: string
@@ -9,29 +9,28 @@ export interface BotAccount {
   dailyActionsUsed: number
   dailyActionLimit: number
   lastUsed: Date
-  accountType: 'dedicated' | 'user_contributed' | 'partner'
+  accountType: "dedicated" | "user_contributed" | "partner"
   contributorUserId?: string
 }
 
 export class BotAccountManager {
-  
   // Get available bot accounts for performing actions
-  async getAvailableBotAccounts(actionType: 'follow' | 'like' | 'comment', count: number = 1): Promise<BotAccount[]> {
+  async getAvailableBotAccounts(actionType: "follow" | "like" | "comment", count = 1): Promise<BotAccount[]> {
     const accounts = await prisma.botAccount.findMany({
       where: {
         isActive: true,
         dailyActionsUsed: {
-          lt: prisma.botAccount.fields.dailyActionLimit
+          lt: prisma.botAccount.fields.dailyActionLimit,
         },
         // Don't use accounts that were used in the last hour
         lastUsed: {
-          lt: new Date(Date.now() - 60 * 60 * 1000)
-        }
+          lt: new Date(Date.now() - 60 * 60 * 1000),
+        },
       },
       orderBy: {
-        dailyActionsUsed: 'asc' // Prefer accounts with fewer actions used
+        dailyActionsUsed: "asc", // Prefer accounts with fewer actions used
       },
-      take: count
+      take: count,
     })
 
     return accounts
@@ -39,17 +38,19 @@ export class BotAccountManager {
 
   // Add a user-contributed account to the bot pool
   async addUserContributedAccount(userId: string, username: string, password: string): Promise<void> {
+    const hashedPassword = await PasswordManager.hashPassword(password)
+
     await prisma.botAccount.create({
       data: {
         username,
-        password: this.encryptPassword(password), // You'd implement encryption
+        password: hashedPassword,
         isActive: true,
         dailyActionsUsed: 0,
         dailyActionLimit: 100, // Conservative limit for user accounts
         lastUsed: new Date(),
-        accountType: 'user_contributed',
-        contributorUserId: userId
-      }
+        accountType: "user_contributed",
+        contributorUserId: userId,
+      },
     })
 
     // Give the user credits for contributing their account
@@ -58,16 +59,18 @@ export class BotAccountManager {
 
   // Add a dedicated bot account
   async addDedicatedBotAccount(username: string, password: string): Promise<void> {
+    const hashedPassword = await PasswordManager.hashPassword(password)
+
     await prisma.botAccount.create({
       data: {
         username,
-        password: this.encryptPassword(password),
+        password: hashedPassword,
         isActive: true,
         dailyActionsUsed: 0,
         dailyActionLimit: 500, // Higher limit for dedicated bots
         lastUsed: new Date(),
-        accountType: 'dedicated'
-      }
+        accountType: "dedicated",
+      },
     })
   }
 
@@ -77,10 +80,10 @@ export class BotAccountManager {
       where: { id: accountId },
       data: {
         dailyActionsUsed: {
-          increment: 1
+          increment: 1,
         },
-        lastUsed: new Date()
-      }
+        lastUsed: new Date(),
+      },
     })
 
     // Log the action for analytics
@@ -88,8 +91,8 @@ export class BotAccountManager {
       data: {
         accountId,
         actionType,
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      },
     })
   }
 
@@ -97,8 +100,8 @@ export class BotAccountManager {
   async resetDailyCounters(): Promise<void> {
     await prisma.botAccount.updateMany({
       data: {
-        dailyActionsUsed: 0
-      }
+        dailyActionsUsed: 0,
+      },
     })
   }
 
@@ -108,33 +111,49 @@ export class BotAccountManager {
       where: { id: userId },
       data: {
         credits: {
-          increment: credits
-        }
-      }
+          increment: credits,
+        },
+      },
     })
   }
 
-  private encryptPassword(password: string): string {
-    // Implement proper encryption here
-    // For demo, just return as-is (DON'T DO THIS IN PRODUCTION)
-    return password
+  // Verify account password
+  async verifyAccountPassword(accountId: string, password: string): Promise<boolean> {
+    const account = await prisma.botAccount.findUnique({
+      where: { id: accountId },
+      select: { password: true },
+    })
+
+    if (!account) return false
+
+    return await PasswordManager.verifyPassword(password, account.password)
+  }
+
+  // Get decrypted credentials for bot operations
+  async getAccountCredentials(accountId: string): Promise<{ username: string } | null> {
+    const account = await prisma.botAccount.findUnique({
+      where: { id: accountId },
+      select: { username: true },
+    })
+
+    return account ? { username: account.username } : null
   }
 
   // Check account health and disable problematic ones
   async monitorAccountHealth(): Promise<void> {
     const accounts = await prisma.botAccount.findMany({
-      where: { isActive: true }
+      where: { isActive: true },
     })
 
     for (const account of accounts) {
       // Check if account has been banned or has issues
       // You'd implement Instagram API checks here
       const isHealthy = await this.checkAccountHealth(account.username)
-      
+
       if (!isHealthy) {
         await prisma.botAccount.update({
           where: { id: account.id },
-          data: { isActive: false }
+          data: { isActive: false },
         })
       }
     }
@@ -152,30 +171,30 @@ export class BotAccountManager {
   async getAccountStats(): Promise<any> {
     const stats = await prisma.botAccount.aggregate({
       _count: {
-        id: true
+        id: true,
       },
       _sum: {
-        dailyActionsUsed: true
+        dailyActionsUsed: true,
       },
       where: {
-        isActive: true
-      }
+        isActive: true,
+      },
     })
 
     const accountsByType = await prisma.botAccount.groupBy({
-      by: ['accountType'],
+      by: ["accountType"],
       _count: {
-        id: true
+        id: true,
       },
       where: {
-        isActive: true
-      }
+        isActive: true,
+      },
     })
 
     return {
       totalAccounts: stats._count.id,
       totalActionsToday: stats._sum.dailyActionsUsed,
-      accountsByType
+      accountsByType,
     }
   }
 }

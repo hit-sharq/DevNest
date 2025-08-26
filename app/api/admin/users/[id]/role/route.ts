@@ -1,31 +1,38 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { currentUser } from "@clerk/nextjs/server"
-import { prisma } from "@/lib/prisma"
-import { isAdmin } from "@/lib/admin"
+import { AuthService } from "@/lib/auth"
+import { userRoleSchema, validateRequest } from "@/lib/validation"
+import { ErrorHandler, generateRequestId, withErrorHandler } from "@/lib/error-handler"
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const user = await currentUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+async function updateUserRoleHandler(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse> {
+  const requestId = generateRequestId()
 
-    if (!isAdmin(user.id)) {
-      return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 })
-    }
+  // Require admin authentication
+  const adminUser = await AuthService.requireAdmin()
 
-    const { role } = await request.json()
-    const targetUserId = params.id
+  const requestData = await request.json()
+  const validation = validateRequest(userRoleSchema, { ...requestData, userId: params.id })
 
-    // Update user role
-    const updatedUser = await prisma.user.update({
-      where: { id: targetUserId },
-      data: { role },
-    })
-
-    return NextResponse.json({ success: true, user: updatedUser })
-  } catch (error) {
-    console.error("Role update error:", error)
-    return NextResponse.json({ error: "Failed to update user role" }, { status: 500 })
+  if (!validation.success) {
+    throw ErrorHandler.validationError("Invalid request data", validation.error, requestId)
   }
+
+  const { userId, role } = validation.data
+
+  // Update user role using AuthService
+  const success = await AuthService.updateUserRole(userId, role, adminUser.clerkId)
+
+  if (!success) {
+    throw ErrorHandler.serviceUnavailable("Failed to update user role", requestId)
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: `User role updated to ${role}`,
+    requestId,
+  })
 }
+
+export const PATCH = withErrorHandler(updateUserRoleHandler)

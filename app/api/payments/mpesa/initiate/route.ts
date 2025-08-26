@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/prisma"
+import { paymentInitiateSchema, validateRequest } from "@/lib/validation"
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +10,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { planId, amount, phoneNumber, userId } = await request.json()
+    const requestData = await request.json()
+
+    const validation = validateRequest(paymentInitiateSchema, requestData)
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+
+    const { planId, amount, phoneNumber, userId } = validation.data
+
+    const requiredEnvVars = [
+      "MPESA_CONSUMER_KEY",
+      "MPESA_CONSUMER_SECRET",
+      "MPESA_BASE_URL",
+      "MPESA_SHORTCODE",
+      "MPESA_PASSKEY",
+    ]
+    for (const envVar of requiredEnvVars) {
+      if (!process.env[envVar]) {
+        console.error(`Missing required environment variable: ${envVar}`)
+        return NextResponse.json({ error: "Payment service configuration error" }, { status: 500 })
+      }
+    }
 
     // M-Pesa API integration
     const auth = Buffer.from(`${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`).toString(
@@ -22,6 +44,10 @@ export async function POST(request: NextRequest) {
         Authorization: `Basic ${auth}`,
       },
     })
+
+    if (!tokenResponse.ok) {
+      throw new Error("Failed to get M-Pesa access token")
+    }
 
     const tokenData = await tokenResponse.json()
 
@@ -55,6 +81,10 @@ export async function POST(request: NextRequest) {
         TransactionDesc: `DevNest-JM ${planId} Plan Subscription`,
       }),
     })
+
+    if (!stkResponse.ok) {
+      throw new Error("Failed to initiate M-Pesa STK push")
+    }
 
     const stkData = await stkResponse.json()
 
