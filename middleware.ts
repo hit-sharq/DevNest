@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
+import { isAdmin } from "@/lib/admin"
 
 const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)", "/api/webhooks(.*)"])
 const isAdminRoute = createRouteMatcher(["/admin(.*)"])
@@ -9,7 +10,12 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   if (isAdminRoute(req)) {
-    await auth.protect()
+    const { userId } = await auth()
+
+    if (!userId || !isAdmin(userId)) {
+      // Redirect non-admin users to dashboard
+      return Response.redirect(new URL("/dashboard", req.url))
+    }
   }
 })
 

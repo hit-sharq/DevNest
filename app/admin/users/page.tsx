@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import { isAdmin } from "@/lib/admin"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { UsersTable } from "@/components/admin/users-table"
 import { UsersStats } from "@/components/admin/users-stats"
@@ -12,13 +13,27 @@ export default async function AdminUsersPage() {
     redirect("/sign-in")
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkId: user.id },
-  })
-
-  if (!dbUser || (dbUser.role !== "admin" && dbUser.role !== "super_admin")) {
+  if (!isAdmin(user.id)) {
     redirect("/dashboard")
   }
+
+  // Get or create user in database (for analytics purposes)
+  const dbUser = await prisma.user.upsert({
+    where: { clerkId: user.id },
+    update: {
+      email: user.emailAddresses[0]?.emailAddress || "",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
+    create: {
+      clerkId: user.id,
+      email: user.emailAddresses[0]?.emailAddress || "",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
+  })
 
   const users = await prisma.user.findMany({
     include: {

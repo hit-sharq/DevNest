@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/prisma"
+import { isAdmin } from "@/lib/admin"
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -9,12 +10,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Check if current user is admin
-    const currentDbUser = await prisma.user.findUnique({
-      where: { clerkId: user.id },
-    })
-
-    if (!currentDbUser || (currentDbUser.role !== "admin" && currentDbUser.role !== "super_admin")) {
+    if (!isAdmin(user.id)) {
       return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 })
     }
 

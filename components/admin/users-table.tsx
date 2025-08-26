@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, MoreHorizontal, Crown } from "lucide-react"
+import { getAdminUserIds } from "@/lib/admin"
 
 interface UsersTableProps {
   users: any[]
@@ -16,6 +17,8 @@ interface UsersTableProps {
 export function UsersTable({ users }: UsersTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredUsers, setFilteredUsers] = useState(users)
+
+  const adminUserIds = getAdminUserIds()
 
   const handleSearch = (term: string) => {
     setSearchTerm(term)
@@ -86,7 +89,9 @@ export function UsersTable({ users }: UsersTableProps) {
                     <div>
                       <div className="font-medium">
                         {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : "No name"}
-                        {user.role === "admin" && <Crown className="w-4 h-4 inline ml-2 text-yellow-500" />}
+                        {adminUserIds.includes(user.clerkId) && (
+                          <Crown className="w-4 h-4 inline ml-2 text-yellow-500" />
+                        )}
                       </div>
                       <div className="text-sm text-muted-foreground">{user.email}</div>
                     </div>

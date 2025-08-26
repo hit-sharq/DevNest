@@ -1,13 +1,18 @@
 import { UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { TrendingUp, Plus } from "lucide-react"
+import { TrendingUp, Plus, Shield } from "lucide-react"
 import Link from "next/link"
+import { isAdmin } from "@/lib/admin"
+import { currentUser } from "@clerk/nextjs/server"
 
 interface DashboardHeaderProps {
   user: any
 }
 
-export function DashboardHeader({ user }: DashboardHeaderProps) {
+export async function DashboardHeader({ user }: DashboardHeaderProps) {
+  const clerkUser = await currentUser()
+  const showAdminPanel = clerkUser && isAdmin(clerkUser.id)
+
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -33,6 +38,14 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
               <Button variant="ghost" className="text-muted-foreground hover:text-foreground" asChild>
                 <Link href="/billing">Billing</Link>
               </Button>
+              {showAdminPanel && (
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground" asChild>
+                  <Link href="/admin" className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4" />
+                    <span>Admin Panel</span>
+                  </Link>
+                </Button>
+              )}
             </nav>
           </div>
 
