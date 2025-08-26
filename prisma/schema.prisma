@@ -33,8 +33,48 @@ model User {
   // Analytics
   analytics UserAnalytics[]
   serviceOrders ServiceOrder[]
+  
+  // Credits system
+  credits Int @default(0)
+  
+  // Bot accounts contributed by this user
+  contributedBotAccounts BotAccount[]
 
   @@map("users")
+}
+
+model BotAccount {
+  id                String   @id @default(cuid())
+  username          String   @unique
+  password          String   // Encrypted
+  isActive          Boolean  @default(true)
+  dailyActionsUsed  Int      @default(0)
+  dailyActionLimit  Int      @default(100)
+  lastUsed          DateTime @default(now())
+  accountType       String   // 'dedicated', 'user_contributed', 'partner'
+  contributorUserId String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  contributor User?       @relation(fields: [contributorUserId], references: [id])
+  actions     BotAction[]
+
+  @@map("bot_accounts")
+}
+
+model BotAction {
+  id         String   @id @default(cuid())
+  accountId  String
+  actionType String   // 'follow', 'like', 'comment'
+  targetUrl  String?
+  success    Boolean  @default(true)
+  timestamp  DateTime @default(now())
+
+  // Relations
+  account BotAccount @relation(fields: [accountId], references: [id])
+
+  @@map("bot_actions")
 }
 
 model InstagramAccount {
