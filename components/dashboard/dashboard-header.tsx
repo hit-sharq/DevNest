@@ -4,9 +4,7 @@ import { TrendingUp, Plus, Shield, Zap, Clock } from "lucide-react"
 import Link from "next/link"
 import { isAdmin } from "@/lib/admin"
 import { currentUser } from "@clerk/nextjs/server"
-import { PaidServicesModal } from "@/components/services/paid-services-modal"
-import { OrderHistoryModal } from "@/components/services/order-history-modal"
-import { useState } from "react"
+import { DashboardHeaderClient } from "./dashboard-header-client"
 
 interface DashboardHeaderProps {
   user: any
@@ -17,10 +15,6 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
   const showAdminPanel = clerkUser && isAdmin(clerkUser.id)
   const userId = clerkUser?.id
   const accounts = user?.accounts || []
-
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [showPaidServices, setShowPaidServices] = useState(false)
-  const [showOrderHistory, setShowOrderHistory] = useState(false)
 
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
@@ -59,26 +53,7 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button onClick={() => setShowCreateModal(true)} className="bg-accent hover:bg-accent/90">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Campaign
-            </Button>
-            <div className="flex space-x-2">
-              <Button
-                onClick={() => setShowOrderHistory(true)}
-                variant="outline"
-              >
-                <Clock className="w-4 h-4 mr-2" />
-                Order History
-              </Button>
-              <Button
-                onClick={() => setShowPaidServices(true)}
-                className="bg-accent hover:bg-accent/90"
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                Boost Services
-              </Button>
-            </div>
+            <DashboardHeaderClient accounts={accounts} userId={userId} />
             <UserButton
               appearance={{
                 elements: {
@@ -89,20 +64,6 @@ export async function DashboardHeader({ user }: DashboardHeaderProps) {
           </div>
         </div>
       </div>
-      {showPaidServices && (
-        <PaidServicesModal
-          accounts={accounts}
-          userId={userId}
-          onClose={() => setShowPaidServices(false)}
-        />
-      )}
-
-      {showOrderHistory && (
-        <OrderHistoryModal
-          userId={userId}
-          onClose={() => setShowOrderHistory(false)}
-        />
-      )}
     </header>
   )
 }
