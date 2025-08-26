@@ -122,6 +122,9 @@ importers:
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      lib:
+        specifier: link:@/lib
+        version: link:@/lib
       lucide-react:
         specifier: ^0.454.0
         version: 0.454.0(react@19.0.0)
