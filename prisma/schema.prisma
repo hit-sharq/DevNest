@@ -28,11 +28,11 @@ model User {
   instagramAccounts InstagramAccount[]
 
   // Campaigns
-  campaigns ServiceOrder[]
+  campaigns Campaign[]
 
   // Analytics
   analytics UserAnalytics[]
-  serviceOrders     ServiceOrder[]
+  serviceOrders ServiceOrder[]
 
   @@map("users")
 }
