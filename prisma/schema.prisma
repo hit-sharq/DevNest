@@ -33,10 +33,10 @@ model User {
   // Analytics
   analytics UserAnalytics[]
   serviceOrders ServiceOrder[]
-  
+
   // Credits system
   credits Int @default(0)
-  
+
   // Bot accounts contributed by this user
   contributedBotAccounts BotAccount[]
 
@@ -64,17 +64,32 @@ model BotAccount {
 }
 
 model BotAction {
-  id         String   @id @default(cuid())
-  accountId  String
-  actionType String   // 'follow', 'like', 'comment'
-  targetUrl  String?
-  success    Boolean  @default(true)
-  timestamp  DateTime @default(now())
-
-  // Relations
-  account BotAccount @relation(fields: [accountId], references: [id])
+  id        String   @id @default(cuid())
+  accountId String
+  actionType String
+  timestamp DateTime
+  account   BotAccount @relation(fields: [accountId], references: [id])
 
   @@map("bot_actions")
+}
+
+model CreatedAccount {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  email       String
+  password    String   // Encrypted
+  phone       String?
+  accountType String   @default("auto_generated") // auto_generated, manual, imported
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Optional metadata
+  proxyUsed   String?
+  emailService String?
+  phoneService String?
+
+  @@map("created_accounts")
 }
 
 model InstagramAccount {
@@ -211,16 +226,16 @@ model ServiceOrder {
   orderDate   DateTime @default(now())
   startedAt   DateTime? // When delivery started
   completedAt DateTime? // When delivery completed
-  
+
   // Delivery settings
   deliverySpeed String @default("normal") // "slow", "normal", "fast"
   targetCountry String? // Geographic targeting
-  
+
   // Provider info
   providerId    String? // Which SMM provider was used
   providerOrderId String? // Provider's order reference
   providerStatus String? // Raw status from provider
-  
+
   // Quality control
   retentionRate Float? // Percentage of delivered items retained after 7 days
   refillCount   Int @default(0) // Number of times order was refilled

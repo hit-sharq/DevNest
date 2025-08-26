@@ -7,6 +7,9 @@ import { AdminStats } from "@/components/admin/admin-stats"
 import { RecentUsers } from "@/components/admin/recent-users"
 import { PlatformAnalytics } from "@/components/admin/platform-analytics"
 import { SystemHealth } from "@/components/admin/system-health"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BotAccountsManagement } from "@/components/admin/bot-accounts-management"
+import { AccountCreation } from "@/components/admin/account-creation"
 
 export default async function AdminPage() {
   const user = await currentUser()
@@ -64,16 +67,34 @@ export default async function AdminPage() {
 
         <AdminStats totalUsers={totalUsers} totalCampaigns={totalCampaigns} activeSubscriptions={totalRevenue} />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <PlatformAnalytics />
-            <RecentUsers users={recentUsers} />
-          </div>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="bot-accounts">Bot Accounts</TabsTrigger>
+            <TabsTrigger value="account-creation">Account Creation</TabsTrigger>
+          </TabsList>
 
-          <div className="space-y-8">
-            <SystemHealth />
-          </div>
-        </div>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-8">
+                <PlatformAnalytics />
+                <RecentUsers users={recentUsers} />
+              </div>
+
+              <div className="space-y-8">
+                <SystemHealth />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="bot-accounts" className="space-y-6">
+            <BotAccountsManagement />
+          </TabsContent>
+
+          <TabsContent value="account-creation" className="space-y-6">
+            <AccountCreation />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   )
