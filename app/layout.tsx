@@ -1,3 +1,4 @@
+
 import type React from "react"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Inter, JetBrains_Mono } from "next/font/google"
@@ -18,7 +19,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   title: "DevNest-JM - Instagram Growth Platform",
   description: "Professional Instagram growth and analytics platform by DevNest-JM",
-    generator: 'v0.app'
+  generator: 'v0.app',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

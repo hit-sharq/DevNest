@@ -6,7 +6,7 @@ const testimonials = [
   {
     name: "Sarah Johnson",
     role: "Content Creator",
-    avatar: "/woman-content-creator.png",
+    avatar: "/placeholder-user.jpg",
     content:
       "DevNest helped me grow from 2K to 50K followers in just 6 months. The engagement is real and my community is thriving!",
     rating: 5,
@@ -14,7 +14,7 @@ const testimonials = [
   {
     name: "Mike Chen",
     role: "Small Business Owner",
-    avatar: "/asian-businessman-meeting.png",
+    avatar: "/placeholder-user.jpg",
     content:
       "Finally, a growth service that actually works. My restaurant's Instagram now brings in 30% of our new customers.",
     rating: 5,
@@ -22,7 +22,7 @@ const testimonials = [
   {
     name: "Emma Rodriguez",
     role: "Fitness Influencer",
-    avatar: "/latina-fitness-woman.png",
+    avatar: "/placeholder-user.jpg",
     content:
       "The targeting is incredible. I'm connecting with people who are genuinely interested in fitness and wellness.",
     rating: 5,

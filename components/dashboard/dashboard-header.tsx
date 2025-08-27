@@ -41,7 +41,7 @@ export function DashboardHeader({ user, showAdminPanel, userId, accounts }: Dash
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
@@ -74,7 +74,7 @@ export function DashboardHeader({ user, showAdminPanel, userId, accounts }: Dash
             </nav>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-wrap gap-2">
             <DashboardHeaderClient accounts={accounts} userId={userId} />
             <ClientUserButton />
           </div>

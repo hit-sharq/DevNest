@@ -26,19 +26,38 @@ export function DashboardHeaderClient({ accounts, userId }: DashboardHeaderClien
 
   return (
     <>
-      <Button onClick={() => setShowCreateModal(true)} className="bg-accent hover:bg-accent/90">
-        <Plus className="w-4 h-4 mr-2" />
-        Create Campaign
-      </Button>
-      <div className="flex space-x-2">
-        <Button onClick={() => setShowOrderHistory(true)} variant="outline">
-          <Clock className="w-4 h-4 mr-2" />
-          Order History
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Button 
+          onClick={() => setShowCreateModal(true)} 
+          className="bg-accent hover:bg-accent/90"
+          size="sm"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          <span className="hidden xs:inline">Create Campaign</span>
+          <span className="xs:hidden">Create</span>
         </Button>
-        <Button onClick={() => setShowPaidServices(true)} className="bg-accent hover:bg-accent/90">
-          <Zap className="w-4 h-4 mr-2" />
-          Boost Services
-        </Button>
+        
+        <div className="flex flex-col xs:flex-row gap-2">
+          <Button 
+            onClick={() => setShowOrderHistory(true)} 
+            variant="outline"
+            size="sm"
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            <span className="hidden xs:inline">Order History</span>
+            <span className="xs:hidden">Orders</span>
+          </Button>
+          
+          <Button 
+            onClick={() => setShowPaidServices(true)} 
+            className="bg-accent hover:bg-accent/90"
+            size="sm"
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            <span className="hidden xs:inline">Boost Services</span>
+            <span className="xs:hidden">Boost</span>
+          </Button>
+        </div>
       </div>
 
       {showPaidServices && (

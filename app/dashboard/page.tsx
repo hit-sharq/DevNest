@@ -59,19 +59,19 @@ export default async function DashboardPage() {
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         <div className="animate-fade-in-up">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, {user.firstName || "User"}!</h1>
-          <p className="text-muted-foreground">Here's what's happening with your Instagram growth</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Welcome back, {user.firstName || "User"}!</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">Here's what's happening with your Instagram growth</p>
         </div>
 
         <StatsCards user={dbUser} />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="lg:col-span-2 space-y-6 sm:space-y-8">
             <AnalyticsChart userId={dbUser.id} />
             <CampaignsList campaigns={dbUser.campaigns} />
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <InstagramAccounts accounts={dbUser.instagramAccounts} userId={dbUser.id} />
           </div>
         </div>

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
 :root {
   /* Updated color tokens for modern Instagram growth platform */
   --background: oklch(0.98 0.002 264.052); /* #f8fafc */
@@ -10,7 +15,8 @@
   --card-foreground: oklch(0.18 0.005 264.052); /* #1f2937 */
   --popover: oklch(1 0 0); /* #ffffff */
   --popover-foreground: oklch(0.18 0.005 264.052); /* #1f2937 */
-  --primary: oklch(0.18 极.005 264.052); /* #1f2937 */
+  /* Fixed invalid character in primary variable */
+  --primary: oklch(0.18 0.005 264.052); /* #1f2937 */
   --primary-foreground: oklch(1 0 0); /* #ffffff */
   --secondary: oklch(0.55 0.15 264.052); /* #8b5cf6 */
   --secondary-foreground: oklch(1 0 0); /* #ffffff */
@@ -33,7 +39,8 @@
   --sidebar-foreground: oklch(0.18 0.005 264.052); /* #1f2937 */
   --sidebar-primary: oklch(0.98 0.002 264.052); /* #f8fafc */
   --sidebar-primary-foreground: oklch(0.18 0.005 264.052); /* #1f2937 */
-  --sidebar-ac极nt: oklch(0.55 0.15 264.052); /* #8b5cf6 */
+  /* Fixed typo in sidebar-accent variable */
+  --sidebar-accent: oklch(0.55 0.15 264.052); /* #8b5cf6 */
   --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
   --sidebar-border: oklch(0.92 0.002 264.052); /* #e5e7eb */
   --sidebar-ring: oklch(0.55 0.15 264.052); /* #8b5cf6 */
@@ -78,7 +85,19 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif);
+    font-family: var(
+      --font-sans,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      sans-serif
+    );
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
