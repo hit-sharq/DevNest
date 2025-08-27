@@ -163,10 +163,10 @@ export class InstagramBot {
           return links
             .map(link => link.getAttribute('href'))
             .filter(href => href && href.match(/^\/[^\/]+\/$/) && !href.includes('/tagged/'))
-            .map(href => href.replace(/\//g, ''))
+            .map(href => href!.replace(/\//g, ''))
         })
 
-        newFollowers.forEach(follower => {
+        newFollowers.forEach((follower: string) => {
           if (!followers.includes(follower) && followers.length < limit) {
             followers.push(follower)
           }

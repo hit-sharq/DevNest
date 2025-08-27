@@ -10,7 +10,7 @@ export interface BotAccount {
   dailyActionLimit: number
   lastUsed: Date
   accountType: "dedicated" | "user_contributed" | "partner"
-  contributorUserId?: string
+  contributorUserId?: string | null
 }
 
 export class BotAccountManager {

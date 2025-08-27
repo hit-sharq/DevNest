@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -17,6 +16,14 @@ export function DashboardHeaderClient({ accounts, userId }: DashboardHeaderClien
   const [showPaidServices, setShowPaidServices] = useState(false)
   const [showOrderHistory, setShowOrderHistory] = useState(false)
 
+  if (!userId) {
+    return (
+      <Button disabled variant="outline">
+        Please sign in to access services
+      </Button>
+    )
+  }
+
   return (
     <>
       <Button onClick={() => setShowCreateModal(true)} className="bg-accent hover:bg-accent/90">
@@ -24,36 +31,21 @@ export function DashboardHeaderClient({ accounts, userId }: DashboardHeaderClien
         Create Campaign
       </Button>
       <div className="flex space-x-2">
-        <Button
-          onClick={() => setShowOrderHistory(true)}
-          variant="outline"
-        >
+        <Button onClick={() => setShowOrderHistory(true)} variant="outline">
           <Clock className="w-4 h-4 mr-2" />
           Order History
         </Button>
-        <Button
-          onClick={() => setShowPaidServices(true)}
-          className="bg-accent hover:bg-accent/90"
-        >
+        <Button onClick={() => setShowPaidServices(true)} className="bg-accent hover:bg-accent/90">
           <Zap className="w-4 h-4 mr-2" />
           Boost Services
         </Button>
       </div>
 
       {showPaidServices && (
-        <PaidServicesModal
-          accounts={accounts}
-          userId={userId}
-          onClose={() => setShowPaidServices(false)}
-        />
+        <PaidServicesModal accounts={accounts} userId={userId} onClose={() => setShowPaidServices(false)} />
       )}
 
-      {showOrderHistory && (
-        <OrderHistoryModal
-          userId={userId}
-          onClose={() => setShowOrderHistory(false)}
-        />
-      )}
+      {showOrderHistory && <OrderHistoryModal userId={userId} onClose={() => setShowOrderHistory(false)} />}
     </>
   )
 }

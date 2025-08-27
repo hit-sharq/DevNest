@@ -1,5 +1,6 @@
-
 "use client"
+
+import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,52 +10,70 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Bot, Users, Shield, Activity } from "lucide-react"
 
+interface BotAccountStats {
+  totalAccounts: number
+  totalActionsToday: number
+  accountsByType: Array<{
+    accountType: string
+    _count: { id: number }
+  }>
+}
+
+interface BotAccount {
+  id: string
+  username: string
+  dailyActionsUsed: number
+  dailyActionLimit: number
+  accountType: string
+  isActive: boolean
+}
+
 export function BotAccountsManagement() {
-  const [accounts, setAccounts] = useState([])
-  const [stats, setStats] = useState(null)
+  const [accounts, setAccounts] = useState<BotAccount[]>([])
+  const [stats, setStats] = useState<BotAccountStats | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    accountType: 'dedicated'
+    username: "",
+    password: "",
+    accountType: "dedicated",
   })
 
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
-      const response = await fetch('/api/admin/bot-accounts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      const response = await fetch("/api/admin/bot-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       })
 
       if (response.ok) {
-        alert('Bot account added successfully!')
-        setFormData({ username: '', password: '', accountType: 'dedicated' })
+        alert("Bot account added successfully!")
+        setFormData({ username: "", password: "", accountType: "dedicated" })
         setShowAddForm(false)
         // Refresh data
         loadData()
       }
     } catch (error) {
-      alert('Failed to add bot account')
+      alert("Failed to add bot account")
     }
   }
 
   const loadData = async () => {
     try {
       const [accountsRes, statsRes] = await Promise.all([
-        fetch('/api/admin/bot-accounts'),
-        fetch('/api/admin/bot-accounts/stats')
+        fetch("/api/admin/bot-accounts"),
+        fetch("/api/admin/bot-accounts/stats"),
       ])
-      
+
       const accountsData = await accountsRes.json()
       const statsData = await statsRes.json()
-      
+
       setAccounts(accountsData)
       setStats(statsData)
     } catch (error) {
-      console.error('Failed to load data:', error)
+      console.error("Failed to load data:", error)
     }
   }
 
@@ -78,7 +97,7 @@ export function BotAccountsManagement() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center">
@@ -97,7 +116,8 @@ export function BotAccountsManagement() {
                 <Shield className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
                   <p className="text-2xl font-bold">
-                    {stats.accountsByType?.find(t => t.accountType === 'dedicated')?._count?.id || 0}
+                    {stats.accountsByType?.find((t: { accountType: string }) => t.accountType === "dedicated")?._count
+                      ?.id || 0}
                   </p>
                   <p className="text-xs text-muted-foreground">Dedicated Bots</p>
                 </div>
@@ -111,7 +131,8 @@ export function BotAccountsManagement() {
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
                   <p className="text-2xl font-bold">
-                    {stats.accountsByType?.find(t => t.accountType === 'user_contributed')?._count?.id || 0}
+                    {stats.accountsByType?.find((t: { accountType: string }) => t.accountType === "user_contributed")
+                      ?._count?.id || 0}
                   </p>
                   <p className="text-xs text-muted-foreground">User Contributed</p>
                 </div>
@@ -144,7 +165,7 @@ export function BotAccountsManagement() {
                   <Input
                     id="username"
                     value={formData.username}
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     required
                   />
                 </div>
@@ -154,7 +175,7 @@ export function BotAccountsManagement() {
                     id="password"
                     type="password"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                   />
                 </div>
@@ -169,7 +190,7 @@ export function BotAccountsManagement() {
           )}
 
           <div className="space-y-3">
-            {accounts.map((account: any) => (
+            {accounts.map((account: BotAccount) => (
               <div key={account.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center space-x-3">
                   <Bot className="h-5 w-5 text-muted-foreground" />
@@ -181,11 +202,11 @@ export function BotAccountsManagement() {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Badge variant={account.accountType === 'dedicated' ? 'default' : 'secondary'}>
+                  <Badge variant={account.accountType === "dedicated" ? "default" : "secondary"}>
                     {account.accountType}
                   </Badge>
-                  <Badge variant={account.isActive ? 'default' : 'destructive'}>
-                    {account.isActive ? 'Active' : 'Inactive'}
+                  <Badge variant={account.isActive ? "default" : "destructive"}>
+                    {account.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </div>
               </div>

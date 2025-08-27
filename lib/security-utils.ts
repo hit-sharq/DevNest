@@ -10,7 +10,7 @@ export function getClientIP(req: NextRequest): string {
     return forwarded.split(",")[0].trim()
   }
 
-  return realIp || cfConnectingIp || req.ip || "unknown"
+  return realIp || cfConnectingIp || "unknown"
 }
 
 export function isValidOrigin(origin: string | null): boolean {

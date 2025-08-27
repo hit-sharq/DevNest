@@ -18,7 +18,7 @@ model User {
   updatedAt         DateTime           @updatedAt
 
   role              String             @default("user") // user, admin, super_admin
-
+  isActive          Boolean            @default(true) // Added isActive field for user status tracking
   // Subscription info
   subscriptionId     String?
   subscriptionStatus String?
@@ -36,6 +36,8 @@ model User {
 
   // Credits system
   credits Int @default(0)
+  totalOrders Int @default(0) // Added totalOrders field for tracking user order count
+  totalSpent Float @default(0) // Added totalSpent field for tracking user spending
 
   // Bot accounts contributed by this user
   contributedBotAccounts BotAccount[]
@@ -51,7 +53,7 @@ model BotAccount {
   dailyActionsUsed  Int      @default(0)
   dailyActionLimit  Int      @default(100)
   lastUsed          DateTime @default(now())
-  accountType       String   // 'dedicated', 'user_contributed', 'partner'
+  accountType       AccountType @default(dedicated) // Changed accountType to enum for type safety
   contributorUserId String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -63,12 +65,18 @@ model BotAccount {
   @@map("bot_accounts")
 }
 
+enum AccountType {
+  dedicated
+  user_contributed
+  partner
+}
+
 model BotAction {
   id        String   @id @default(cuid())
   accountId String
   actionType String
   timestamp DateTime
-  account   BotAccount @relation(fields: [accountId], references: [id])
+  account   BotAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("bot_actions")
 }
@@ -103,6 +111,7 @@ model InstagramAccount {
   followingCount Int            @default(0)
   postsCount     Int            @default(0)
   isActive       Boolean        @default(true)
+  connectedAt    DateTime       @default(now()) // Added connectedAt field for sorting by connection date
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 

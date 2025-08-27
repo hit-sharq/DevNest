@@ -1,7 +1,6 @@
-
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,10 +32,10 @@ export function AccountCreation() {
   const handleCreateBatch = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/admin/create-accounts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: batchCount, scheduled: false })
+      const response = await fetch("/api/admin/create-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count: batchCount, scheduled: false }),
       })
 
       if (response.ok) {
@@ -44,10 +43,10 @@ export function AccountCreation() {
         alert(data.message)
         await loadStats()
       } else {
-        alert('Failed to start account creation')
+        alert("Failed to start account creation")
       }
     } catch (error) {
-      alert('Error starting account creation')
+      alert("Error starting account creation")
     } finally {
       setLoading(false)
     }
@@ -56,10 +55,10 @@ export function AccountCreation() {
   const handleScheduledCreation = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/admin/create-accounts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: accountsPerDay, scheduled: true })
+      const response = await fetch("/api/admin/create-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count: accountsPerDay, scheduled: true }),
       })
 
       if (response.ok) {
@@ -67,10 +66,10 @@ export function AccountCreation() {
         alert(data.message)
         setScheduledEnabled(true)
       } else {
-        alert('Failed to start scheduled creation')
+        alert("Failed to start scheduled creation")
       }
     } catch (error) {
-      alert('Error starting scheduled creation')
+      alert("Error starting scheduled creation")
     } finally {
       setLoading(false)
     }
@@ -78,18 +77,18 @@ export function AccountCreation() {
 
   const loadStats = async () => {
     try {
-      const response = await fetch('/api/admin/create-accounts')
+      const response = await fetch("/api/admin/create-accounts")
       if (response.ok) {
         const data = await response.json()
         setStats(data)
       }
     } catch (error) {
-      console.error('Failed to load stats:', error)
+      console.error("Failed to load stats:", error)
     }
   }
 
   // Load stats on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     loadStats()
   }, [])
 
@@ -100,9 +99,7 @@ export function AccountCreation() {
           <Bot className="w-5 h-5" />
           <span>Automatic Account Creation</span>
         </h3>
-        <p className="text-sm text-muted-foreground">
-          Automatically create Instagram accounts for your bot pool
-        </p>
+        <p className="text-sm text-muted-foreground">Automatically create Instagram accounts for your bot pool</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -113,9 +110,7 @@ export function AccountCreation() {
               <Plus className="w-4 h-4" />
               <span>Batch Creation</span>
             </CardTitle>
-            <CardDescription>
-              Create multiple accounts immediately
-            </CardDescription>
+            <CardDescription>Create multiple accounts immediately</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -126,18 +121,12 @@ export function AccountCreation() {
                 min="1"
                 max="20"
                 value={batchCount}
-                onChange={(e) => setBatchCount(parseInt(e.target.value) || 1)}
+                onChange={(e) => setBatchCount(Number.parseInt(e.target.value) || 1)}
               />
-              <p className="text-xs text-muted-foreground">
-                Maximum 20 accounts per batch
-              </p>
+              <p className="text-xs text-muted-foreground">Maximum 20 accounts per batch</p>
             </div>
-            
-            <Button 
-              onClick={handleCreateBatch}
-              disabled={loading}
-              className="w-full"
-            >
+
+            <Button onClick={handleCreateBatch} disabled={loading} className="w-full">
               {loading ? "Creating..." : `Create ${batchCount} Accounts`}
             </Button>
           </CardContent>
@@ -150,20 +139,14 @@ export function AccountCreation() {
               <Settings className="w-4 h-4" />
               <span>Scheduled Creation</span>
             </CardTitle>
-            <CardDescription>
-              Automatically create accounts daily
-            </CardDescription>
+            <CardDescription>Automatically create accounts daily</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="scheduled">Enable Scheduled Creation</Label>
-              <Switch
-                id="scheduled"
-                checked={scheduledEnabled}
-                onCheckedChange={setScheduledEnabled}
-              />
+              <Switch id="scheduled" checked={scheduledEnabled} onCheckedChange={setScheduledEnabled} />
             </div>
-            
+
             {scheduledEnabled && (
               <div className="space-y-2">
                 <Label htmlFor="accountsPerDay">Accounts Per Day</Label>
@@ -173,12 +156,12 @@ export function AccountCreation() {
                   min="1"
                   max="50"
                   value={accountsPerDay}
-                  onChange={(e) => setAccountsPerDay(parseInt(e.target.value) || 1)}
+                  onChange={(e) => setAccountsPerDay(Number.parseInt(e.target.value) || 1)}
                 />
               </div>
             )}
-            
-            <Button 
+
+            <Button
               onClick={handleScheduledCreation}
               disabled={loading || !scheduledEnabled}
               variant={scheduledEnabled ? "default" : "secondary"}
@@ -210,14 +193,12 @@ export function AccountCreation() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {stats.recentAccounts.filter(a => a.isActive).length}
+                    {stats.recentAccounts.filter((a) => a.isActive).length}
                   </div>
                   <p className="text-sm text-muted-foreground">Active</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">
-                    {stats.recentAccounts.length}
-                  </div>
+                  <div className="text-2xl font-bold text-orange-600">{stats.recentAccounts.length}</div>
                   <p className="text-sm text-muted-foreground">Recent</p>
                 </div>
               </div>
@@ -235,9 +216,7 @@ export function AccountCreation() {
                         <Badge variant={account.isActive ? "default" : "secondary"}>
                           {account.isActive ? "Active" : "Inactive"}
                         </Badge>
-                        <Badge variant="outline">
-                          {account.accountType}
-                        </Badge>
+                        <Badge variant="outline">{account.accountType}</Badge>
                       </div>
                     </div>
                   ))}
@@ -245,9 +224,7 @@ export function AccountCreation() {
               </div>
             </div>
           ) : (
-            <div className="text-center text-muted-foreground">
-              Loading statistics...
-            </div>
+            <div className="text-center text-muted-foreground">Loading statistics...</div>
           )}
         </CardContent>
       </Card>

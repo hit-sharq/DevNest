@@ -1,18 +1,18 @@
 import type React from "react"
 import { ClerkProvider } from "@clerk/nextjs"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
-const geistSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-sans",
+  variable: "--font-inter",
 })
 
-const geistMono = Geist_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-mono",
+  variable: "--font-jetbrains-mono",
 })
 
 export const metadata = {
@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
         <body className="min-h-screen bg-background font-sans">{children}</body>
       </html>
     </ClerkProvider>

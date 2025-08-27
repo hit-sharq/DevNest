@@ -1,16 +1,18 @@
 import { prisma } from "./prisma"
-import { ErrorHandler, ErrorCode } from "./error-handler"
+import { ErrorCode, CustomError } from "./error-handler"
 
 export class DatabaseTransaction {
   /**
    * Execute multiple database operations in a transaction
    */
-  static async execute<T>(operations: (tx: typeof prisma) => Promise<T>, maxRetries = 3): Promise<T> {
+  static async execute<T>(operations: (tx: any) => Promise<T>, maxRetries = 3): Promise<T> {
     let lastError: Error | null = null
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        return await prisma.$transaction(operations, {
+        return await prisma.$transaction(async (tx) => {
+          return await operations(tx);
+        }, {
           maxWait: 5000, // 5 seconds
           timeout: 10000, // 10 seconds
         })
@@ -31,7 +33,7 @@ export class DatabaseTransaction {
     }
 
     // All retries failed
-    throw new ErrorHandler.CustomError(
+    throw new CustomError(
       ErrorCode.DATABASE_ERROR,
       `Transaction failed after ${maxRetries} attempts: ${lastError?.message}`,
       500,
@@ -61,10 +63,10 @@ export class DatabaseTransaction {
   /**
    * Safe upsert operation with conflict handling
    */
-  static async safeUpsert<T>(model: any, where: any, create: any, update: any): Promise<T> {
+  static async safeUpsert<T>(model: string, where: any, create: any, update: any): Promise<T> {
     return this.execute(async (tx) => {
       try {
-        return await tx[model].upsert({
+        return await (tx as any)[model].upsert({
           where,
           create,
           update,
@@ -73,9 +75,9 @@ export class DatabaseTransaction {
         // Handle race conditions in upsert
         if (error instanceof Error && error.message.includes("Unique constraint")) {
           // Try to find existing record
-          const existing = await tx[model].findUnique({ where })
+          const existing = await (tx as any)[model].findUnique({ where })
           if (existing) {
-            return await tx[model].update({
+            return await (tx as any)[model].update({
               where,
               data: update,
             })
