@@ -1,0 +1,232 @@
+ ✓ Starting...
+ ✓ Ready in 3.9s
+ ✓ Compiled /middleware in 364ms (197 modules)
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 6.2s (2276 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ POST /admin 200 in 23ms
+ POST /admin 200 in 33ms
+ GET /admin 200 in 8043ms
+ ○ Compiling /api/admin/platform-analytics ...
+ ✓ Compiled /api/admin/platform-analytics in 807ms (1253 modules)
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 1499ms
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 396ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1991ms (2345 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard?_rsc=1jqx0 200 in 1541ms
+ ✓ Compiled /api/analytics/[userId] in 289ms (1294 modules)
+Error fetching analytics: PrismaClientValidationError: 
+Invalid `prisma.instagramAccount.findMany()` invocation:
+
+{
+  where: {
+    userId: "cmetslec00000epxbu2jy3xq6"
+  },
+  include: {
+    followers: {
+      orderBy: {
+        createdAt: "desc",
+        ~~~~~~~~~
+?       id?: SortOrder,
+?       accountId?: SortOrder,
+?       username?: SortOrder,
+?       displayName?: SortOrder | SortOrderInput,
+?       profilePic?: SortOrder | SortOrderInput,
+?       followedAt?: SortOrder,
+?       unfollowedAt?: SortOrder | SortOrderInput,
+?       isActive?: SortOrder,
+?       source?: SortOrder | SortOrderInput,
+?       account?: InstagramAccountOrderByWithRelationInput
+      },
+      take: 30
+    },
+    campaigns: {
+      include: {
+        actions: true
+      }
+    }
+  }
+}
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at _n (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at ei.handleRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6926)
+    at ei.handleAndLogRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6608)
+    at ei.request (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6315)
+    at async a (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async GET (webpack-internal:///(rsc)/./app/api/analytics/[userId]/route.ts:23:26)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1576:40)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  clientVersion: '6.14.0'
+}
+ GET /api/analytics/cmetslec00000epxbu2jy3xq6 500 in 1300ms
+Error fetching analytics: PrismaClientValidationError: 
+Invalid `prisma.instagramAccount.findMany()` invocation:
+
+{
+  where: {
+    userId: "cmetslec00000epxbu2jy3xq6"
+  },
+  include: {
+    followers: {
+      orderBy: {
+        createdAt: "desc",
+        ~~~~~~~~~
+?       id?: SortOrder,
+?       accountId?: SortOrder,
+?       username?: SortOrder,
+?       displayName?: SortOrder | SortOrderInput,
+?       profilePic?: SortOrder | SortOrderInput,
+?       followedAt?: SortOrder,
+?       unfollowedAt?: SortOrder | SortOrderInput,
+?       isActive?: SortOrder,
+?       source?: SortOrder | SortOrderInput,
+?       account?: InstagramAccountOrderByWithRelationInput
+      },
+      take: 30
+    },
+    campaigns: {
+      include: {
+        actions: true
+      }
+    }
+  }
+}
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at _n (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at ei.handleRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6926)
+    at ei.handleAndLogRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6608)
+    at ei.request (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6315)
+    at async a (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async GET (webpack-internal:///(rsc)/./app/api/analytics/[userId]/route.ts:23:26)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1576:40)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  clientVersion: '6.14.0'
+}
+ GET /api/analytics/cmetslec00000epxbu2jy3xq6 500 in 416ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /admin?_rsc=1njkv 200 in 831ms
+ ✓ Compiled /api/admin/platform-analytics in 308ms (1296 modules)
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 986ms
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 530ms
