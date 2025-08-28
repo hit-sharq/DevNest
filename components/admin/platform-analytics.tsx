@@ -4,157 +4,156 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts"
 import { useEffect, useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { RefreshCw } from "lucide-react"
 
-interface PlatformData {
-  userGrowthData: Array<{
-    date: string
-    users: number
-    revenue: number
-  }>
-  planDistribution: Array<{
-    plan: string
-    users: number
-    percentage: number
-  }>
+interface AnalyticsData {
+  userGrowth: { date: string; users: number }[]
+  campaigns: Record<string, number>
+  revenue: { total: number; monthly: number }
+  overview: {
+    totalUsers: number
+    totalCampaigns: number
+    activeSubscriptions: number
+    totalOrders: number
+    recentSignups: number
+    monthlyRevenue: number
+  }
 }
 
 export function PlatformAnalytics() {
-  const [data, setData] = useState<PlatformData | null>(null)
+  const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchPlatformAnalytics = async () => {
-      try {
-        const response = await fetch('/api/admin/platform-analytics')
-        if (response.ok) {
-          const analyticsData = await response.json()
-          setData(analyticsData)
-        }
-      } catch (error) {
-        console.error('Failed to fetch platform analytics:', error)
-        // Fallback to empty data
-        setData({
-          userGrowthData: [],
-          planDistribution: []
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPlatformAnalytics()
+    fetchAnalytics()
   }, [])
+
+  const fetchAnalytics = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/platform-analytics')
+      if (response.ok) {
+        const result = await response.json()
+        setData(result.analytics)
+      }
+    } catch (error) {
+      console.error('Failed to fetch analytics:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <Card className="animate-fade-in-up">
-          <CardHeader>
-            <CardTitle>Platform Growth</CardTitle>
-            <CardDescription>User growth and revenue over time</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <Skeleton className="w-full h-full" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="animate-fade-in-up">
-          <CardHeader>
-            <CardTitle>Plan Distribution</CardTitle>
-            <CardDescription>User distribution across subscription plans</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <Skeleton className="w-full h-full" />
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center py-8">
+        <RefreshCw className="w-8 h-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
+  if (!data) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <p className="text-muted-foreground">Failed to load analytics data</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const campaignTypesData = Object.entries(data.campaigns || {}).map(([name, value], index) => ({
+    name,
+    value,
+    color: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'][index % 4]
+  }))
+
+  const userGrowthData = data.userGrowth?.map(item => ({
+    month: new Date(item.date).toLocaleDateString('en-US', { month: 'short' }),
+    users: item.users
+  })) || []
+
+  const revenueData = [
+    { month: "This Month", amount: data.revenue?.monthly || 0 }
+  ]
+
   return (
-    <div className="space-y-6">
-      <Card className="animate-fade-in-up">
+    <div className="grid lg:grid-cols-2 gap-6 animate-slide-in-left">
+      <Card>
         <CardHeader>
-          <CardTitle>Platform Growth</CardTitle>
-          <CardDescription>User growth and revenue over time</CardDescription>
+          <CardTitle>User Growth</CardTitle>
+          <CardDescription>Recent user registrations</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            {data && data.userGrowthData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data.userGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                  <XAxis
-                    dataKey="date"
-                    className="text-muted-foreground"
-                    tickFormatter={(value) => new Date(value).toLocaleDateString()}
-                  />
-                  <YAxis className="text-muted-foreground" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="users"
-                    stroke="hsl(var(--chart-1))"
-                    strokeWidth={3}
-                    dot={{ fill: "hsl(var(--chart-1))", strokeWidth: 2, r: 4 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="hsl(var(--chart-2))"
-                    strokeWidth={3}
-                    dot={{ fill: "hsl(var(--chart-2))", strokeWidth: 2, r: 4 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                <p>No growth data available yet</p>
-              </div>
-            )}
-          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={userGrowthData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="users" stroke="#3b82f6" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
 
-      <Card className="animate-fade-in-up">
+      <Card>
         <CardHeader>
-          <CardTitle>Plan Distribution</CardTitle>
-          <CardDescription>User distribution across subscription plans</CardDescription>
+          <CardTitle>Campaign Distribution</CardTitle>
+          <CardDescription>Campaign status breakdown</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            {data && data.planDistribution.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.planDistribution}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                  <XAxis dataKey="plan" className="text-muted-foreground" />
-                  <YAxis className="text-muted-foreground" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Bar dataKey="users" fill="hsl(var(--chart-3))" />
-                </BarChart>
-              </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height={300}>
+            {campaignTypesData.length > 0 ? (
+              <PieChart>
+                <Pie
+                  data={campaignTypesData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {campaignTypesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                <p>No plan distribution data available yet</p>
+              <div className="flex items-center justify-center h-full">
+                <p className="text-muted-foreground">No campaign data available</p>
               </div>
             )}
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Revenue Overview</CardTitle>
+          <CardDescription>Platform revenue metrics</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Total Revenue</p>
+              <p className="text-2xl font-bold">${data.revenue?.total || 0}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Monthly Revenue</p>
+              <p className="text-2xl font-bold">${data.revenue?.monthly || 0}</p>
+            </div>
           </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={revenueData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => [`$${value}`, "Revenue"]} />
+              <Bar dataKey="amount" fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>

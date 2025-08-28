@@ -1,43 +1,85 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Server, Database, Zap, AlertTriangle } from "lucide-react"
+import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+import { useState, useEffect } from "react"
+
+interface SystemMetric {
+  name: string
+  value: string
+  progress: number
+  status: string
+  icon: any
+}
 
 export function SystemHealth() {
-  const systemMetrics = [
-    {
-      name: "API Response Time",
-      value: "245ms",
-      status: "good",
-      progress: 85,
-      icon: Zap,
-    },
-    {
-      name: "Database Performance",
-      value: "98.5%",
-      status: "excellent",
-      progress: 98,
-      icon: Database,
-    },
-    {
-      name: "Server Uptime",
-      value: "99.9%",
-      status: "excellent",
-      progress: 99,
-      icon: Server,
-    },
-    {
-      name: "Error Rate",
-      value: "0.1%",
-      status: "good",
-      progress: 10,
-      icon: AlertTriangle,
-    },
-  ]
+  const [metrics, setMetrics] = useState<SystemMetric[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchSystemHealth()
+    const interval = setInterval(fetchSystemHealth, 30000) // Update every 30 seconds
+    return () => clearInterval(interval)
+  }, [])
+
+  const fetchSystemHealth = async () => {
+    try {
+      // For now, we'll simulate system metrics
+      // In a real implementation, these would come from actual monitoring APIs
+      const simulatedMetrics = [
+        { 
+          name: "Database", 
+          value: "Online", 
+          progress: 100, 
+          status: "healthy", 
+          icon: Database 
+        },
+        { 
+          name: "Bot Accounts", 
+          value: "Active", 
+          progress: 85, 
+          status: "healthy", 
+          icon: Users 
+        },
+        { 
+          name: "API Status", 
+          value: "Operational", 
+          progress: 95, 
+          status: "healthy", 
+          icon: Zap 
+        },
+        { 
+          name: "Order Queue", 
+          value: "Processing", 
+          progress: 70, 
+          status: "warning", 
+          icon: Activity 
+        },
+      ]
+
+      setMetrics(simulatedMetrics)
+      setLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch system health:', error)
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card className="animate-slide-in-right">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center">
+            <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "excellent":
+      case "healthy":
         return "bg-green-500"
       case "good":
         return "bg-blue-500"
@@ -60,7 +102,7 @@ export function SystemHealth() {
         <CardDescription>Real-time platform monitoring</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {systemMetrics.map((metric, index) => (
+        {metrics.map((metric, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">

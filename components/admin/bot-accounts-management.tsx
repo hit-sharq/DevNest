@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Bot, Users, Shield, Activity } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface BotAccountStats {
   totalAccounts: number
@@ -30,13 +31,60 @@ interface BotAccount {
 
 export function BotAccountsManagement() {
   const [accounts, setAccounts] = useState<BotAccount[]>([])
-  const [stats, setStats] = useState<BotAccountStats | null>(null)
+  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<BotAccountStats | null>(null) // Changed to BotAccountStats for type safety
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     accountType: "dedicated",
   })
+
+  useEffect(() => {
+    fetchAccounts()
+    fetchStats()
+  }, [statusFilter])
+
+  const fetchAccounts = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (statusFilter !== 'all') params.set('status', statusFilter)
+
+      const response = await fetch(`/api/admin/bot-accounts?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setAccounts(data) // Assuming data is the array of accounts
+      } else {
+        // Handle non-ok responses, e.g., 403 Forbidden, 404 Not Found
+        console.error("Failed to fetch accounts:", response.status, response.statusText)
+        setAccounts([]) // Clear accounts on error
+      }
+    } catch (error) {
+      console.error('Failed to fetch accounts:', error)
+      setAccounts([]) // Clear accounts on error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/bot-accounts/stats')
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data) // Assuming data is the stats object
+      } else {
+        console.error("Failed to fetch stats:", response.status, response.statusText)
+        setStats(null) // Clear stats on error
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error)
+      setStats(null) // Clear stats on error
+    }
+  }
 
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,38 +101,77 @@ export function BotAccountsManagement() {
         setFormData({ username: "", password: "", accountType: "dedicated" })
         setShowAddForm(false)
         // Refresh data
-        loadData()
+        fetchAccounts()
+        fetchStats() // Also refresh stats if adding an account affects them
+      } else {
+        alert(`Failed to add bot account: ${response.statusText}`)
       }
     } catch (error) {
       alert("Failed to add bot account")
     }
   }
 
-  const loadData = async () => {
+  const handleBulkAction = async (action: string, status?: string) => {
+    if (selectedAccounts.length === 0) return
+
     try {
-      const [accountsRes, statsRes] = await Promise.all([
-        fetch("/api/admin/bot-accounts"),
-        fetch("/api/admin/bot-accounts/stats"),
-      ])
+      const response = await fetch('/api/admin/bot-accounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action,
+          accountIds: selectedAccounts,
+          status
+        })
+      })
 
-      const accountsData = await accountsRes.json()
-      const statsData = await statsRes.json()
-
-      setAccounts(accountsData)
-      setStats(statsData)
+      if (response.ok) {
+        fetchAccounts()
+        fetchStats()
+        setSelectedAccounts([])
+      } else {
+        alert(`Bulk action failed: ${response.statusText}`)
+      }
     } catch (error) {
-      console.error("Failed to load data:", error)
+      console.error('Bulk action failed:', error)
+      alert('Bulk action failed.')
     }
   }
 
-  useEffect(() => {
-    loadData()
-  }, [])
+  const handleSelectAccount = (accountId: string) => {
+    setSelectedAccounts(prev =>
+      prev.includes(accountId) ? prev.filter(id => id !== accountId) : [...prev, accountId]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectedAccounts.length === accounts.length) {
+      setSelectedAccounts([])
+    } else {
+      setSelectedAccounts(accounts.map(acc => acc.id))
+    }
+  }
 
   return (
     <div className="space-y-6">
       {/* Stats Overview */}
-      {stats && (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="pt-6">
+                <div className="flex items-center">
+                  <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : stats ? (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="pt-6">
@@ -140,6 +227,12 @@ export function BotAccountsManagement() {
             </CardContent>
           </Card>
         </div>
+      ) : (
+        <Card>
+          <CardContent>
+            <p className="text-center text-muted-foreground">Could not load statistics.</p>
+          </CardContent>
+        </Card>
       )}
 
       {/* Bot Accounts List */}
@@ -189,29 +282,85 @@ export function BotAccountsManagement() {
             </form>
           )}
 
-          <div className="space-y-3">
-            {accounts.map((account: BotAccount) => (
-              <div key={account.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <Bot className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">@{account.username}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {account.dailyActionsUsed}/{account.dailyActionLimit} actions used today
-                    </p>
+          {loading && accounts.length === 0 && (
+            <div className="space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <div className="space-y-1">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-48" />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-16" />
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant={account.accountType === "dedicated" ? "default" : "secondary"}>
-                    {account.accountType}
-                  </Badge>
-                  <Badge variant={account.isActive ? "default" : "destructive"}>
-                    {account.isActive ? "Active" : "Inactive"}
-                  </Badge>
+              ))}
+            </div>
+          )}
+
+          {!loading && accounts.length === 0 && (
+            <div className="text-center text-muted-foreground py-4">No bot accounts found.</div>
+          )}
+
+          {!loading && accounts.length > 0 && (
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-4">
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="p-2 border rounded-md"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="banned">Banned</option>
+                  </select>
+                  {selectedAccounts.length > 0 && (
+                    <div className="flex space-x-2">
+                      <Button variant="outline" size="sm" onClick={() => handleBulkAction('activate')}>Activate</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleBulkAction('deactivate')}>Deactivate</Button>
+                      <Button variant="destructive" size="sm" onClick={() => handleBulkAction('ban')}>Ban</Button>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div className="space-y-3">
+                {accounts.map((account: BotAccount) => (
+                  <div key={account.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedAccounts.includes(account.id)}
+                        onChange={() => handleSelectAccount(account.id)}
+                        className="form-checkbox h-5 w-5 text-blue-600"
+                      />
+                      <Bot className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="font-medium">@{account.username}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {account.dailyActionsUsed}/{account.dailyActionLimit} actions used today
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant={account.accountType === "dedicated" ? "default" : "secondary"}>
+                        {account.accountType}
+                      </Badge>
+                      <Badge variant={account.isActive ? "default" : "destructive"}>
+                        {account.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

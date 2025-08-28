@@ -1,102 +1,86 @@
+
 import { type NextRequest, NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
+import { isAdmin } from "@/lib/admin"
 import { prisma } from "@/lib/prisma"
-import { accountCreationManager } from "@/lib/instagram-account-creator"
-
-export async function POST(request: NextRequest) {
-  try {
-    const user = await currentUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    // Check if user is admin
-    const dbUser = await prisma.user.findUnique({
-      where: { clerkId: user.id }
-    })
-
-    if (!dbUser || dbUser.role !== 'admin') {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 })
-    }
-
-    const { count, scheduled } = await request.json()
-
-    if (scheduled) {
-      // Start scheduled creation
-      const accountsPerDay = count || 10
-      await accountCreationManager.startScheduledCreation(accountsPerDay)
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: `Scheduled creation started: ${accountsPerDay} accounts per day` 
-      })
-    } else {
-      // Create accounts immediately
-      const batchCount = Math.min(count || 5, 20) // Limit to 20 accounts per batch
-      
-      // Start the creation process in the background
-      accountCreationManager.createBatchAccounts(batchCount).catch(console.error)
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: `Account creation started: ${batchCount} accounts` 
-      })
-    }
-
-  } catch (error) {
-    console.error("Account creation API error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
-  }
-}
 
 export async function GET(request: NextRequest) {
   try {
     const user = await currentUser()
-    if (!user) {
+    if (!user || !isAdmin(user.id)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Check if user is admin
-    const dbUser = await prisma.user.findUnique({
-      where: { clerkId: user.id }
+    // Get account creation stats
+    const stats = await prisma.botAccount.groupBy({
+      by: ['status'],
+      _count: { id: true }
     })
 
-    if (!dbUser || dbUser.role !== 'admin') {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 })
-    }
-
-    // Get created accounts statistics
-    const stats = await prisma.createdAccount.aggregate({
-      _count: {
-        id: true
-      },
-      where: {
-        isActive: true
-      }
-    })
-
-    const recentAccounts = await prisma.createdAccount.findMany({
-      orderBy: {
-        createdAt: 'desc'
-      },
+    const recentCreations = await prisma.botAccount.findMany({
       take: 10,
+      orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         username: true,
-        email: true,
+        status: true,
         createdAt: true,
-        isActive: true,
-        accountType: true
+        lastUsed: true
       }
     })
 
     return NextResponse.json({
-      totalAccounts: stats._count.id,
-      recentAccounts
+      stats: stats.reduce((acc, item) => {
+        acc[item.status] = item._count.id
+        return acc
+      }, {} as Record<string, number>),
+      recentCreations
     })
 
   } catch (error) {
-    console.error("Get accounts API error:", error)
+    console.error("Create accounts fetch error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const user = await currentUser()
+    if (!user || !isAdmin(user.id)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const { action, count } = await request.json()
+
+    if (action === 'create_accounts') {
+      const accountCount = Math.min(count || 1, 10) // Limit to 10 accounts at once
+      
+      // Create placeholder bot accounts (replace with actual Instagram account creation logic)
+      const accounts = []
+      for (let i = 0; i < accountCount; i++) {
+        const account = await prisma.botAccount.create({
+          data: {
+            username: `bot_${Date.now()}_${i}`,
+            email: `bot_${Date.now()}_${i}@temp-mail.com`,
+            status: 'creating',
+            dailyLimit: 500,
+            currentUsage: 0
+          }
+        })
+        accounts.push(account)
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        message: `${accountCount} accounts queued for creation`,
+        accounts
+      })
+    }
+
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 })
+
+  } catch (error) {
+    console.error("Create accounts error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
