@@ -1,4 +1,3 @@
-
 "use client"
 
 import type React from "react"
@@ -59,11 +58,11 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: MessageCircle,
       color: "text-green-600",
       packages: [
-        { quantity: 10, price: 4.99, delivery: "1-6 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
-        { quantity: 25, price: 11.99, delivery: "2-12 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
-        { quantity: 50, price: 22.99, delivery: "6-24 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
-        { quantity: 100, price: 42.99, delivery: "12-48 hours", quality: "Custom", retention: "Permanent", source: "Real Users" },
-        { quantity: 250, price: 99.99, delivery: "1-3 days", quality: "Premium Custom", retention: "Permanent", source: "Native Speakers" },
+        { quantity: 10, price: 1.99, delivery: "1-12 hours", quality: "Custom Comments", retention: "Lifetime", source: "Real Users" },
+        { quantity: 25, price: 3.99, delivery: "1-24 hours", quality: "Custom Comments", retention: "Lifetime", source: "Real Users" },
+        { quantity: 50, price: 6.99, delivery: "1-3 days", quality: "Premium Comments", retention: "Lifetime", source: "Real Users" },
+        { quantity: 100, price: 12.99, delivery: "2-5 days", quality: "Premium Comments", retention: "Lifetime", source: "Real Users" },
+        { quantity: 250, price: 24.99, delivery: "3-7 days", quality: "Premium Comments", retention: "Lifetime", source: "Real Users" },
       ]
     },
     views: {
@@ -71,12 +70,12 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: Eye,
       color: "text-purple-600",
       packages: [
-        { quantity: 1000, price: 0.99, delivery: "1-30 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
-        { quantity: 5000, price: 3.99, delivery: "30-120 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
-        { quantity: 10000, price: 6.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
-        { quantity: 25000, price: 14.99, delivery: "6-24 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
-        { quantity: 50000, price: 24.99, delivery: "12-48 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
-        { quantity: 100000, price: 44.99, delivery: "1-3 days", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 1000, price: 0.49, delivery: "5-30 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
+        { quantity: 5000, price: 1.99, delivery: "30-120 mins", quality: "High Quality", retention: "No Drop", source: "Worldwide" },
+        { quantity: 10000, price: 3.49, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 25000, price: 7.99, delivery: "6-24 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 50000, price: 14.99, delivery: "12-48 hours", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
+        { quantity: 100000, price: 24.99, delivery: "1-3 days", quality: "Premium", retention: "No Drop", source: "Geo-Targeted" },
       ]
     },
     story_views: {
@@ -84,11 +83,11 @@ export function PaidServicesModal({ accounts, userId, onClose }: PaidServicesMod
       icon: Play,
       color: "text-orange-600",
       packages: [
-        { quantity: 100, price: 1.99, delivery: "5-30 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
-        { quantity: 500, price: 7.99, delivery: "10-60 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
-        { quantity: 1000, price: 14.99, delivery: "30-120 mins", quality: "Premium", retention: "No Drop", source: "Real Users" },
-        { quantity: 2500, price: 29.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
-        { quantity: 5000, price: 54.99, delivery: "2-12 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 100, price: 0.99, delivery: "5-30 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
+        { quantity: 500, price: 3.99, delivery: "10-60 mins", quality: "High Quality", retention: "No Drop", source: "Real Users" },
+        { quantity: 1000, price: 6.99, delivery: "30-120 mins", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 2500, price: 14.99, delivery: "1-6 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
+        { quantity: 5000, price: 24.99, delivery: "2-12 hours", quality: "Premium", retention: "No Drop", source: "Real Users" },
       ]
     }
   }
