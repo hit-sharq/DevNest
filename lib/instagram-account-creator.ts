@@ -14,9 +14,13 @@ export class InstagramAccountCreator {
   private browser: any = null
   private page: any = null
   private config: AccountCreationConfig
+  private proxyManager: ProxyManager
+  private fingerprintManager: FingerprintManager
 
   constructor(config: AccountCreationConfig) {
     this.config = config
+    this.proxyManager = new ProxyManager()
+    this.fingerprintManager = new FingerprintManager()
   }
 
   async initialize() {
