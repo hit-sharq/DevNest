@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
-    const status = searchParams.get('status')
+    const isActive = searchParams.get('status') === 'active' ? true : searchParams.get('status') === 'inactive' ? false : undefined
     const offset = (page - 1) * limit
 
-    const whereCondition = status ? { status } : {}
+    const whereCondition = isActive !== undefined ? { isActive } : {}
 
     const [accounts, totalAccounts] = await Promise.all([
       prisma.botAccount.findMany({
@@ -28,12 +28,12 @@ export async function GET(request: NextRequest) {
         select: {
           id: true,
           username: true,
-          email: true,
-          status: true,
-          dailyLimit: true,
-          currentUsage: true,
+          isActive: true,
+          dailyActionLimit: true,
+          dailyActionsUsed: true,
           lastUsed: true,
-          createdAt: true
+          createdAt: true,
+          accountType: true
         }
       }),
       prisma.botAccount.count({ where: whereCondition })
@@ -62,17 +62,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { action, accountIds, status } = await request.json()
+    const { action, accountIds, isActive } = await request.json()
 
     switch (action) {
       case 'update_status':
         await prisma.botAccount.updateMany({
           where: { id: { in: accountIds } },
-          data: { status }
+          data: { isActive }
         })
         return NextResponse.json({ 
           success: true, 
-          message: `Updated ${accountIds.length} accounts to ${status}` 
+          message: `Updated ${accountIds.length} accounts to ${isActive ? 'active' : 'inactive'}` 
         })
 
       case 'delete':
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       case 'reset_usage':
         await prisma.botAccount.updateMany({
           where: { id: { in: accountIds } },
-          data: { currentUsage: 0 }
+          data: { dailyActionsUsed: 0 }
         })
         return NextResponse.json({ 
           success: true, 

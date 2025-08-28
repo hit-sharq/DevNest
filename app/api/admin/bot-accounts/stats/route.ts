@@ -1,4 +1,3 @@
-
 import { type NextRequest, NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
 import { isAdmin } from "@/lib/admin"
@@ -11,44 +10,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get bot account statistics
-    const [
-      totalAccounts,
-      activeAccounts,
-      bannedAccounts,
-      accountsByStatus,
-      recentActivity
-    ] = await Promise.all([
+    const [totalAccounts, activeAccounts, inactiveAccounts, averageUsage] = await Promise.all([
       prisma.botAccount.count(),
-      prisma.botAccount.count({ where: { status: 'active' } }),
-      prisma.botAccount.count({ where: { status: 'banned' } }),
-      prisma.botAccount.groupBy({
-        by: ['status'],
-        _count: { id: true }
-      }),
-      prisma.botAccount.findMany({
-        take: 10,
-        orderBy: { lastUsed: 'desc' },
-        select: {
-          id: true,
-          username: true,
-          status: true,
-          currentUsage: true,
-          dailyLimit: true,
-          lastUsed: true
-        }
+      prisma.botAccount.count({ where: { isActive: true } }),
+      prisma.botAccount.count({ where: { isActive: false } }),
+      prisma.botAccount.aggregate({
+        _avg: { dailyActionsUsed: true }
       })
     ])
 
     const stats = {
-      total: totalAccounts,
-      active: activeAccounts,
-      banned: bannedAccounts,
-      byStatus: accountsByStatus.reduce((acc, item) => {
-        acc[item.status] = item._count.id
-        return acc
-      }, {} as Record<string, number>),
-      recentActivity
+      totalAccounts,
+      activeAccounts,
+      inactiveAccounts,
+      averageUsage: Math.round(averageUsage._avg.dailyActionsUsed || 0),
+      utilization: totalAccounts > 0 ? Math.round((activeAccounts / totalAccounts) * 100) : 0
     }
 
     return NextResponse.json({ stats })
