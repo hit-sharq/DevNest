@@ -36,79 +36,108 @@ export class OrderProcessor {
         return { success: true, orderId: order.id }
       }
 
-      // Check if we should use internal delivery
-      const useInternalDelivery = await this.shouldUseInternalDelivery(order)
-      
-      if (useInternalDelivery) {
-        console.log(`Processing order ${order.id} internally using bot network`)
-        
-        // Import internal processor
-        const { internalOrderProcessor } = await import('./internal-order-processor')
-        
-        // Add to internal queue with high priority
-        await internalOrderProcessor.addToQueue(order.id, 10)
-        
-        // Mark as queued for internal processing
+      // Check bot availability using our new handler
+      const { botUnavailabilityHandler } = await import('./bot-unavailability-handler')
+      const availabilityCheck = await botUnavailabilityHandler.handleOrderRequest(
+        order.serviceType,
+        order.quantity,
+        order.userId
+      )
+
+      if (!availabilityCheck.canProceed && availabilityCheck.strategy === 'reject') {
+        // Order cannot be processed at all
         await prisma.serviceOrder.update({
           where: { id: order.id },
           data: { 
-            status: 'pending',
-            providerId: 'internal'
+            status: 'failed',
+            failureReason: availabilityCheck.message
+          }
+        })
+
+        return {
+          success: false,
+          error: availabilityCheck.message
+        }
+      }
+
+      // Process based on availability strategy
+      if (availabilityCheck.strategy === 'queue' || order.status === 'queued') {
+        console.log(`Queueing order ${order.id} - insufficient bots available`)
+        
+        await prisma.serviceOrder.update({
+          where: { id: order.id },
+          data: { 
+            status: 'queued',
+            scheduledFor: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+            priority: 5
           }
         })
 
         return {
           success: true,
           orderId: order.id,
-          providerOrderId: `internal_${order.id}`
+          providerOrderId: `queued_${order.id}`
         }
       }
 
-      // Fallback to external providers
-      console.log(`Processing order ${order.id} using external provider`)
+      if (availabilityCheck.strategy === 'partial') {
+        console.log(`Processing order ${order.id} partially - limited bot availability`)
+        
+        // Update quantity to what can be delivered immediately
+        const maxQuantity = availabilityCheck.alternatives?.find(a => a.type === 'partial')?.maxQuantity || order.quantity
+        
+        await prisma.serviceOrder.update({
+          where: { id: order.id },
+          data: { 
+            quantity: maxQuantity,
+            originalQuantity: order.quantity,
+            status: 'processing',
+            startedAt: new Date(),
+            providerId: 'internal'
+          }
+        })
+
+        // Create a separate queued order for the remainder
+        const remainingQuantity = order.quantity - maxQuantity
+        if (remainingQuantity > 0) {
+          await prisma.serviceOrder.create({
+            data: {
+              userId: order.userId,
+              accountId: order.accountId,
+              serviceType: order.serviceType,
+              quantity: remainingQuantity,
+              price: Math.ceil((order.price * remainingQuantity) / order.quantity),
+              status: 'queued',
+              orderDate: new Date(),
+              parentOrderId: order.id
+            }
+          })
+        }
+      } else {
+        // Full processing available
+        console.log(`Processing order ${order.id} internally using bot network`)
+        
+        await prisma.serviceOrder.update({
+          where: { id: order.id },
+          data: { 
+            status: 'processing',
+            startedAt: new Date(),
+            providerId: 'internal'
+          }
+        })
+      }
+
+      // Import internal processor
+      const { internalOrderProcessor } = await import('./internal-order-processor')
       
-      // Update status to processing
-      await prisma.serviceOrder.update({
-        where: { id: order.id },
-        data: { 
-          status: 'processing',
-          startedAt: new Date()
-        }
-      })
-
-      // Map service types to SMM panel service IDs
-      const serviceMapping = await this.getServiceMapping(order.serviceType)
-      
-      if (!serviceMapping) {
-        throw new Error(`Service mapping not found for ${order.serviceType}`)
-      }
-
-      // Prepare order data for SMM panel
-      const smmOrderData: SMMOrderRequest = {
-        action: 'add',
-        service: serviceMapping.serviceId,
-        link: this.buildTargetLink(order),
-        quantity: order.quantity
-      }
-
-      // Create order with SMM provider
-      const smmOrder = await smmProviderManager.createOrder(smmOrderData)
-
-      // Update database with provider order ID
-      await prisma.serviceOrder.update({
-        where: { id: order.id },
-        data: {
-          providerOrderId: smmOrder.orderId,
-          providerId: serviceMapping.providerId
-        }
-      })
-
-      console.log(`Order ${order.id} successfully submitted to provider with ID: ${smmOrder.orderId}`)
+      // Add to internal queue with appropriate priority
+      const priority = order.status === 'queued' ? 3 : 10
+      await internalOrderProcessor.addToQueue(order.id, priority)
 
       return {
         success: true,
         orderId: order.id,
-        providerOrderId: smmOrder.orderId
+        providerOrderId: `internal_${order.id}`
       }
 
     } catch (error) {

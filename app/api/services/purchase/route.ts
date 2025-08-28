@@ -58,23 +58,76 @@ async function purchaseServiceHandler(request: NextRequest): Promise<NextRespons
     return order
   })
 
-  // Import internal order processor
+  // Check bot availability before processing
+  const { botUnavailabilityHandler } = await import("@/lib/bot-unavailability-handler")
+  
+  const availabilityCheck = await botUnavailabilityHandler.handleOrderRequest(
+    serviceType,
+    quantity,
+    userId
+  )
+
+  // Handle different availability scenarios
+  if (!availabilityCheck.canProceed && availabilityCheck.strategy === 'reject') {
+    // Delete the order since it can't be processed
+    await DatabaseTransaction.execute(async (tx) => {
+      await tx.serviceOrder.delete({
+        where: { id: result.id },
+      })
+    })
+
+    return NextResponse.json({
+      success: false,
+      error: availabilityCheck.message,
+      alternatives: availabilityCheck.alternatives,
+      recommendedAction: availabilityCheck.recommendedAction,
+      requestId,
+    }, { status: 400 })
+  }
+
+  // Process order through internal system
   const { internalOrderProcessor } = await import("@/lib/internal-order-processor")
 
-  // Add order to internal processing queue
   try {
-    await internalOrderProcessor.addToQueue(result.id, 1) // Priority 1 for new orders
+    const priority = availabilityCheck.strategy === 'full' ? 10 : 5
+    await internalOrderProcessor.addToQueue(result.id, priority)
+
+    let message = "Order placed successfully!"
+    let statusInfo = {}
+
+    switch (availabilityCheck.strategy) {
+      case 'full':
+        message = `Order placed successfully and will be processed immediately. ${availabilityCheck.message}`
+        break
+      case 'partial':
+        message = `Order placed with partial immediate delivery. ${availabilityCheck.message}`
+        statusInfo = { 
+          partialDelivery: true,
+          alternatives: availabilityCheck.alternatives 
+        }
+        break
+      case 'queue':
+        message = `Order queued successfully. ${availabilityCheck.message}`
+        statusInfo = { 
+          queued: true,
+          alternatives: availabilityCheck.alternatives,
+          estimatedTime: availabilityCheck.alternatives?.[0]?.estimatedTime
+        }
+        break
+    }
 
     return NextResponse.json({
       success: true,
       orderId: result.id,
-      message: "Order placed successfully and queued for internal processing",
+      message,
+      strategy: availabilityCheck.strategy,
+      ...statusInfo,
       requestId,
     })
+
   } catch (processingError) {
     console.error("Order processing failed:", processingError)
 
-    // Update order status to failed in transaction
     await DatabaseTransaction.execute(async (tx) => {
       await tx.serviceOrder.update({
         where: { id: result.id },
