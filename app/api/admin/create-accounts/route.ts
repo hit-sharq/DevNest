@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         username: true,
-        status: true,
+        isActive: true,
         createdAt: true,
         lastUsed: true
       }
@@ -69,9 +69,10 @@ export async function POST(request: NextRequest) {
           data: {
             username: `bot_${Date.now()}_${i}`,
             email: `bot_${Date.now()}_${i}@temp-mail.com`,
-            status: 'creating',
-            dailyLimit: 500,
-            currentUsage: 0
+            isActive: true,
+            dailyActionsUsed: 0,
+            dailyActionLimit: 500,
+            accountType: 'dedicated'
           }
         })
         accounts.push(account)
