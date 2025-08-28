@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/prisma"
@@ -7,7 +6,7 @@ import { isAdmin } from "@/lib/admin"
 export async function GET() {
   try {
     const user = await currentUser()
-    
+
     if (!user || !isAdmin(user.id)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -15,12 +14,12 @@ export async function GET() {
     // Get user growth data for the last 7 days
     const userGrowthData = []
     const now = new Date()
-    
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date(now)
       date.setDate(date.getDate() - i)
       const dateStr = date.toISOString().split('T')[0]
-      
+
       // Count users created up to this date
       const usersCount = await prisma.user.count({
         where: {

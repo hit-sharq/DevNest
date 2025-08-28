@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { currentUser } from "@clerk/nextjs/server"
@@ -9,7 +8,7 @@ export async function GET(
 ) {
   try {
     const user = await currentUser()
-    
+
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
@@ -21,7 +20,9 @@ export async function GET(
       where: { userId },
       include: {
         followers: {
-          orderBy: { createdAt: 'desc' },
+          orderBy: {
+            followedAt: 'desc'
+          },
           take: 30 // Last 30 days
         },
         campaigns: {
@@ -35,7 +36,7 @@ export async function GET(
     // Calculate daily analytics
     const analyticsData = []
     const now = new Date()
-    
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date(now)
       date.setDate(date.getDate() - i)
@@ -48,9 +49,9 @@ export async function GET(
       for (const account of accounts) {
         // Get follower count for this date
         const followerRecord = account.followers.find(f => 
-          f.createdAt.toISOString().split('T')[0] === dateStr
+          f.followedAt.toISOString().split('T')[0] === dateStr
         )
-        
+
         if (followerRecord) {
           totalFollowers += followerRecord.count
           accountCount++
@@ -73,7 +74,7 @@ export async function GET(
           const dayActions = campaign.actions.filter(action => 
             action.createdAt.toISOString().split('T')[0] === dateStr
           )
-          
+
           // Simple engagement calculation: actions per follower * 100
           const followerCount = followerRecord?.count || account.followers[0]?.count || 1
           const engagementRate = (dayActions.length / followerCount) * 100
