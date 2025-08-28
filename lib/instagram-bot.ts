@@ -276,23 +276,32 @@ export class BotManager {
     const targetUsers = await this.getTargetUsers(order.account.username, order.quantity)
     
     let delivered = 0
-    for (const username of targetUsers) {
-      if (delivered >= order.quantity) break
+    const batchSize = 5 // Process in smaller batches for better rate limiting
+    
+    for (let i = 0; i < targetUsers.length && delivered < order.quantity; i += batchSize) {
+      const batch = targetUsers.slice(i, i + batchSize)
       
-      const success = await bot.followUser(username)
-      if (success) {
-        delivered++
+      for (const username of batch) {
+        if (delivered >= order.quantity) break
         
-        // Update progress
-        await prisma.serviceOrder.update({
-          where: { id: order.id },
-          data: { delivered }
-        })
+        const success = await bot.followUser(username)
+        if (success) {
+          delivered++
+          
+          // Update progress more frequently
+          await prisma.serviceOrder.update({
+            where: { id: order.id },
+            data: { delivered }
+          })
+        }
+        
+        // Small delay between each follow
+        await bot.randomDelay(5000)
       }
       
-      // Rate limiting
-      if (delivered % 10 === 0) {
-        await bot.randomDelay(30000) // 30 second break every 10 follows
+      // Longer break between batches
+      if (i + batchSize < targetUsers.length && delivered < order.quantity) {
+        await bot.randomDelay(60000) // 1 minute break between batches
       }
     }
   }

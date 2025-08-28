@@ -36,6 +36,37 @@ export class OrderProcessor {
         return { success: true, orderId: order.id }
       }
 
+      // Check if we should use internal delivery
+      const useInternalDelivery = await this.shouldUseInternalDelivery(order)
+      
+      if (useInternalDelivery) {
+        console.log(`Processing order ${order.id} internally using bot network`)
+        
+        // Import internal processor
+        const { internalOrderProcessor } = await import('./internal-order-processor')
+        
+        // Add to internal queue with high priority
+        await internalOrderProcessor.addToQueue(order.id, 10)
+        
+        // Mark as queued for internal processing
+        await prisma.serviceOrder.update({
+          where: { id: order.id },
+          data: { 
+            status: 'pending',
+            providerId: 'internal'
+          }
+        })
+
+        return {
+          success: true,
+          orderId: order.id,
+          providerOrderId: `internal_${order.id}`
+        }
+      }
+
+      // Fallback to external providers
+      console.log(`Processing order ${order.id} using external provider`)
+      
       // Update status to processing
       await prisma.serviceOrder.update({
         where: { id: order.id },
@@ -211,6 +242,44 @@ export class OrderProcessor {
 
     } catch (error) {
       console.error('Failed to update order status:', error)
+    }
+  }
+
+  private async shouldUseInternalDelivery(order: any): Promise<boolean> {
+    const { deliveryConfigManager } = await import('./delivery-config')
+    
+    const availableBots = await this.getAvailableBotCount()
+    
+    return deliveryConfigManager.shouldUseInternalDelivery(
+      order.serviceType,
+      order.quantity,
+      availableBots
+    )
+  }
+
+  private calculateRequiredBots(serviceType: string, quantity: number): number {
+    // Different services require different bot ratios
+    const botRatios: Record<string, number> = {
+      'followers': Math.ceil(quantity / 50), // 1 bot can follow ~50 accounts per day
+      'likes': Math.ceil(quantity / 100), // 1 bot can like ~100 posts per day
+      'comments': Math.ceil(quantity / 20), // 1 bot can comment ~20 times per day
+    }
+
+    return Math.max(1, botRatios[serviceType] || 1)
+  }
+
+  private async getAvailableBotCount(): Promise<number> {
+    try {
+      const activeBots = await prisma.createdAccount.count({
+        where: {
+          isActive: true,
+          accountType: 'auto_generated'
+        }
+      })
+      return activeBots
+    } catch (error) {
+      console.error('Error getting bot count:', error)
+      return 0
     }
   }
 
