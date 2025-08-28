@@ -12,10 +12,10 @@ import { Plus, Bot, Users, Shield, Activity } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface BotAccountStats {
-  total: number
-  active: number
-  banned: number
-  byStatus: Record<string, number>
+  totalAccounts: number
+  activeAccounts: number
+  inactiveAccounts: number
+  bannedAccounts: number
   recentActivity: Array<{
     id: string
     username: string
@@ -184,20 +184,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Bot className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                  <p className="text-xs text-muted-foreground">Total Bot Accounts</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center">
-                <Activity className="h-4 w-4 text-muted-foreground" />
-                <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.active}</p>
-                  <p className="text-xs text-muted-foreground">Active Accounts</p>
+                  <p className="text-2xl font-bold">{stats.totalAccounts}</p>
+                  <p className="text-xs text-muted-foreground">Total Accounts</p>
                 </div>
               </div>
             </CardContent>
@@ -208,8 +196,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Shield className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.byStatus.active || 0}</p>
-                  <p className="text-xs text-muted-foreground">Active Status</p>
+                  <p className="text-2xl font-bold">{stats.activeAccounts}</p>
+                  <p className="text-xs text-muted-foreground">Active Accounts</p>
                 </div>
               </div>
             </CardContent>
@@ -220,8 +208,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.banned}</p>
-                  <p className="text-xs text-muted-foreground">Banned Accounts</p>
+                  <p className="text-2xl font-bold">{stats.inactiveAccounts}</p>
+                  <p className="text-xs text-muted-foreground">Inactive Accounts</p>
                 </div>
               </div>
             </CardContent>

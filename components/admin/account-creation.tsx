@@ -35,12 +35,12 @@ export function AccountCreation() {
       const response = await fetch("/api/admin/create-accounts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ count: batchCount, scheduled: false }),
+        body: JSON.stringify({ action: 'create_accounts', count: batchCount }),
       })
 
       if (response.ok) {
         const data = await response.json()
-        alert(data.message)
+        alert(data.message || `Created ${batchCount} accounts successfully`)
         await loadStats()
       } else {
         alert("Failed to start account creation")
@@ -56,20 +56,23 @@ export function AccountCreation() {
     setLoading(true)
     try {
       const response = await fetch("/api/admin/create-accounts", {
-        method: "POST",
+        method: "POST", 
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ count: accountsPerDay, scheduled: true }),
+        body: JSON.stringify({ 
+          action: 'setup_scheduled',
+          count: accountsPerDay,
+          enabled: scheduledEnabled
+        }),
       })
 
       if (response.ok) {
         const data = await response.json()
-        alert(data.message)
-        setScheduledEnabled(true)
+        alert(data.message || `Scheduled creation ${scheduledEnabled ? 'enabled' : 'disabled'}`)
       } else {
-        alert("Failed to start scheduled creation")
+        alert("Failed to update scheduled creation")
       }
     } catch (error) {
-      alert("Error starting scheduled creation")
+      alert("Error updating scheduled creation")
     } finally {
       setLoading(false)
     }
@@ -188,17 +191,17 @@ export function AccountCreation() {
             <div className="space-y-4">
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{stats.totalAccounts}</div>
+                  <div className="text-2xl font-bold">{stats.totalAccounts || 0}</div>
                   <p className="text-sm text-muted-foreground">Total Created</p>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {stats.recentAccounts.filter((a) => a.isActive).length}
+                    {stats.recentAccounts?.filter((a) => a.isActive).length || 0}
                   </div>
                   <p className="text-sm text-muted-foreground">Active</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">{stats.recentAccounts.length}</div>
+                  <div className="text-2xl font-bold text-orange-600">{stats.recentAccounts?.length || 0}</div>
                   <p className="text-sm text-muted-foreground">Recent</p>
                 </div>
               </div>
@@ -206,7 +209,7 @@ export function AccountCreation() {
               <div>
                 <h4 className="font-medium mb-2">Recent Accounts</h4>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {stats.recentAccounts.map((account) => (
+                  {stats.recentAccounts?.map((account) => (
                     <div key={account.id} className="flex items-center justify-between p-2 border rounded">
                       <div>
                         <span className="font-medium">@{account.username}</span>

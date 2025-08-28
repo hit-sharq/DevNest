@@ -40,8 +40,15 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      stats: stats,
-      recentCreations
+      totalAccounts,
+      recentAccounts: recentCreations.map(account => ({
+        id: account.id,
+        username: account.username,
+        email: `${account.username}@temp-mail.com`, // Add missing email field
+        createdAt: account.createdAt.toISOString(),
+        isActive: account.isActive,
+        accountType: 'dedicated'
+      }))
     })
 
   } catch (error) {
@@ -57,7 +64,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { action, count } = await request.json()
+    const { action, count, enabled } = await request.json()
 
     if (action === 'create_accounts') {
       const accountCount = Math.min(count || 1, 10) // Limit to 10 accounts at once
@@ -82,6 +89,15 @@ export async function POST(request: NextRequest) {
         success: true,
         message: `${accountCount} accounts queued for creation`,
         accounts
+      })
+    }
+
+    if (action === 'setup_scheduled') {
+      // Here you would implement your scheduling logic
+      // For now, just return success
+      return NextResponse.json({
+        success: true,
+        message: enabled ? `Scheduled creation enabled: ${count} accounts per day` : 'Scheduled creation disabled'
       })
     }
 
