@@ -69,26 +69,48 @@ export async function POST(request: NextRequest) {
     if (action === 'create_accounts') {
       const accountCount = Math.min(count || 1, 10) // Limit to 10 accounts at once
 
-      // Create placeholder bot accounts (replace with actual Instagram account creation logic)
+      // Import the Instagram account creator
+      const { InstagramAccountCreator } = await import('@/lib/instagram-account-creator')
+      const creator = new InstagramAccountCreator()
+
       const accounts = []
+      const errors = []
+
       for (let i = 0; i < accountCount; i++) {
-        const account = await prisma.botAccount.create({
-          data: {
-            username: `bot_${Date.now()}_${i}`,
-            email: `bot_${Date.now()}_${i}@temp-mail.com`,
-            isActive: true,
-            dailyActionsUsed: 0,
-            dailyActionLimit: 500,
-            accountType: 'dedicated'
+        try {
+          // Create actual Instagram account
+          const instagramAccount = await creator.createAccount()
+          
+          if (instagramAccount.success) {
+            // Save successful account to database
+            const account = await prisma.botAccount.create({
+              data: {
+                username: instagramAccount.username,
+                password: instagramAccount.password, // This should be encrypted
+                isActive: true,
+                dailyActionsUsed: 0,
+                dailyActionLimit: 500,
+                accountType: 'dedicated'
+              }
+            })
+            accounts.push(account)
+          } else {
+            errors.push(`Failed to create account ${i + 1}: ${instagramAccount.error}`)
           }
-        })
-        accounts.push(account)
+        } catch (error) {
+          console.error(`Account creation error ${i + 1}:`, error)
+          errors.push(`Account ${i + 1} creation failed: ${error.message}`)
+        }
       }
 
+      const successCount = accounts.length
+      const errorCount = errors.length
+      
       return NextResponse.json({
-        success: true,
-        message: `${accountCount} accounts queued for creation`,
-        accounts
+        success: successCount > 0,
+        message: `${successCount} accounts created successfully${errorCount > 0 ? `, ${errorCount} failed` : ''}`,
+        accounts,
+        errors: errorCount > 0 ? errors : undefined
       })
     }
 
