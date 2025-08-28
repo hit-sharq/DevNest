@@ -1,0 +1,109 @@
+Ready in 2.9s
+ ✓ Compiled /middleware in 436ms (197 modules)
+ ○ Compiling /admin ...
+ ⨯ ./components/admin/system-health.tsx
+Error: 
+  × You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·          ────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+  × You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·                    ─────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+Import trace for requested module:
+./components/admin/system-health.tsx
+./app/admin/page.tsx
+ ⨯ ./components/admin/system-health.tsx
+Error: 
+  × You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·          ────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+  × You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·                    ─────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+Import trace for requested module:
+./components/admin/system-health.tsx
+./app/admin/page.tsx
+ ⨯ ./components/admin/system-health.tsx
+Error: 
+  × You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·          ────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+  × You're importing a component that needs useEffect. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  │ Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  │ 
+  │ 
+   ╭─[/home/joshua/joshua/DevNest/components/admin/system-health.tsx:2:1]
+ 2 │ import { Badge } from "@/components/ui/badge"
+ 3 │ import { Progress } from "@/components/ui/progress"
+ 4 │ import { Server, Database, Zap, AlertTriangle, RefreshCw, Users, Activity } from "lucide-react"
+ 5 │ import { useState, useEffect } from "react"
+   ·                    ─────────
+ 6 │ 
+ 7 │ interface SystemMetric {
+ 8 │   name: string
+   ╰────
+
+Import trace for requested module:
+./components/admin/system-health.tsx
+./app/admin/page.tsx
+ GET /admin 500 in 12171ms
