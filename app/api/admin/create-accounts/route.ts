@@ -1,4 +1,3 @@
-
 import { type NextRequest, NextResponse } from "next/server"
 import { currentUser } from "@clerk/nextjs/server"
 import { isAdmin } from "@/lib/admin"
@@ -12,10 +11,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Get account creation stats
-    const stats = await prisma.botAccount.groupBy({
-      by: ['status'],
-      _count: { id: true }
-    })
+    const [totalAccounts, activeAccounts, inactiveAccounts] = await Promise.all([
+      prisma.botAccount.count(),
+      prisma.botAccount.count({ where: { isActive: true } }),
+      prisma.botAccount.count({ where: { isActive: false } })
+    ])
 
     const recentCreations = await prisma.botAccount.findMany({
       take: 10,
@@ -29,11 +29,18 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    const stats = {
+      totalAccounts,
+      activeAccounts,
+      inactiveAccounts,
+      byStatus: {
+        active: activeAccounts,
+        inactive: inactiveAccounts
+      }
+    }
+
     return NextResponse.json({
-      stats: stats.reduce((acc, item) => {
-        acc[item.status] = item._count.id
-        return acc
-      }, {} as Record<string, number>),
+      stats: stats,
       recentCreations
     })
 
@@ -54,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     if (action === 'create_accounts') {
       const accountCount = Math.min(count || 1, 10) // Limit to 10 accounts at once
-      
+
       // Create placeholder bot accounts (replace with actual Instagram account creation logic)
       const accounts = []
       for (let i = 0; i < accountCount; i++) {
@@ -70,8 +77,8 @@ export async function POST(request: NextRequest) {
         accounts.push(account)
       }
 
-      return NextResponse.json({ 
-        success: true, 
+      return NextResponse.json({
+        success: true,
         message: `${accountCount} accounts queued for creation`,
         accounts
       })
