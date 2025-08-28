@@ -1,0 +1,84 @@
+00 in 33ms
+ POST / 200 in 18ms
+ ○ Compiling /sign-in/[[...rest]] ...
+ ✓ Compiled /sign-in/[[...rest]] in 2.4s (1085 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /sign-in. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /sign-in/SignIn_clerk_catchall_check_1756385743642. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /sign-in/SignIn_clerk_catchall_check_1756385743642 200 in 151ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 3s (2305 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /dashboard?_rsc=1gtj6 200 in 1251ms
+ ✓ Compiled /api/analytics/[userId] in 288ms (1284 modules)
+ GET /api/analytics/cmetslec00000epxbu2jy3xq6 200 in 1400ms
+ GET /api/analytics/cmetslec00000epxbu2jy3xq6 200 in 443ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 1466ms (2361 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /admin?_rsc=1njkv 200 in 1104ms
+ ✓ Compiled /api/admin/platform-analytics in 470ms (1320 modules)
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 1162ms
+Error fetching platform analytics: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/admin/platform-analytics/route.ts:39:93)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13)
+ GET /api/admin/platform-analytics 500 in 499ms
+ ○ Compiling /api/admin/create-accounts ...
+ ✓ Compiled /api/admin/create-accounts in 521ms (1330 modules)
+ GET /api/admin/create-accounts 403 in 1602ms
+ GET /api/admin/create-accounts 403 in 367ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 752ms (2378 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /.well-known/appspecific/com.chrome.devtools.json. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 995ms
+ ✓ Compiled /api/admin/bot-accounts/stats in 271ms (1333 modules)
+ ✓ Compiled (1335 modules)
+ GET /api/admin/bot-accounts/stats 403 in 1536ms
+ GET /api/admin/bot-accounts/stats 403 in 2001ms
+ GET /api/admin/bot-accounts 403 in 14306ms
+ GET /api/admin/bot-accounts 403 in 1114ms
