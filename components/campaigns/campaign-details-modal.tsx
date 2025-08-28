@@ -6,28 +6,42 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { Calendar, Target, TrendingUp, Users, Heart, MessageCircle } from "lucide-react"
+import { useState, useEffect } from "react"
 
 interface CampaignDetailsModalProps {
   campaign: any
   onClose: () => void
+  open: boolean;
 }
 
-export function CampaignDetailsModal({ campaign, onClose }: CampaignDetailsModalProps) {
-  // Mock analytics data - in real app, fetch from database
-  const analyticsData = [
-    { date: "2024-01-01", follows: 12, likes: 45, comments: 8 },
-    { date: "2024-01-02", follows: 15, likes: 52, comments: 12 },
-    { date: "2024-01-03", follows: 8, likes: 38, comments: 6 },
-    { date: "2024-01-04", follows: 18, likes: 67, comments: 15 },
-    { date: "2024-01-05", follows: 22, likes: 73, comments: 18 },
-    { date: "2024-01-06", follows: 16, likes: 58, comments: 11 },
-    { date: "2024-01-07", follows: 20, likes: 65, comments: 14 },
-  ]
+export function CampaignDetailsModal({ campaign, onClose, open }: CampaignDetailsModalProps) {
+  const [analyticsData, setAnalyticsData] = useState([])
+  const [analyticsLoading, setAnalyticsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchCampaignAnalytics = async () => {
+      try {
+        const response = await fetch(`/api/campaigns/${campaign.id}/analytics`)
+        if (response.ok) {
+          const data = await response.json()
+          setAnalyticsData(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch campaign analytics:', error)
+      } finally {
+        setAnalyticsLoading(false)
+      }
+    }
+
+    if (open) {
+      fetchCampaignAnalytics()
+    }
+  }, [campaign.id, open])
 
   const recentActions = campaign.actions?.slice(0, 10) || []
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
@@ -163,45 +177,51 @@ export function CampaignDetailsModal({ campaign, onClose }: CampaignDetailsModal
               </CardHeader>
               <CardContent>
                 <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={analyticsData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                      <XAxis
-                        dataKey="date"
-                        className="text-muted-foreground"
-                        tickFormatter={(value) => new Date(value).toLocaleDateString()}
-                      />
-                      <YAxis className="text-muted-foreground" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="follows"
-                        stroke="hsl(var(--chart-1))"
-                        strokeWidth={3}
-                        dot={{ fill: "hsl(var(--chart-1))", strokeWidth: 2, r: 4 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="likes"
-                        stroke="hsl(var(--chart-2))"
-                        strokeWidth={3}
-                        dot={{ fill: "hsl(var(--chart-2))", strokeWidth: 2, r: 4 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="comments"
-                        stroke="hsl(var(--chart-3))"
-                        strokeWidth={3}
-                        dot={{ fill: "hsl(var(--chart-3))", strokeWidth: 2, r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {analyticsLoading ? (
+                    <div className="flex items-center justify-center h-full">Loading analytics...</div>
+                  ) : analyticsData.length === 0 ? (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">No analytics data available.</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={analyticsData}>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                        <XAxis
+                          dataKey="date"
+                          className="text-muted-foreground"
+                          tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                        />
+                        <YAxis className="text-muted-foreground" />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "8px",
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="follows"
+                          stroke="hsl(var(--chart-1))"
+                          strokeWidth={3}
+                          dot={{ fill: "hsl(var(--chart-1))", strokeWidth: 2, r: 4 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="likes"
+                          stroke="hsl(var(--chart-2))"
+                          strokeWidth={3}
+                          dot={{ fill: "hsl(var(--chart-2))", strokeWidth: 2, r: 4 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="comments"
+                          stroke="hsl(var(--chart-3))"
+                          strokeWidth={3}
+                          dot={{ fill: "hsl(var(--chart-3))", strokeWidth: 2, r: 4 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
                 </div>
               </CardContent>
             </Card>

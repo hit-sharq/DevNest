@@ -67,15 +67,15 @@ export function PlatformAnalytics() {
         </CardContent>
       </Card>
 
-      <Card className="animate-slide-in-right">
+      <Card className="animate-fade-in-up">
         <CardHeader>
           <CardTitle>Plan Distribution</CardTitle>
           <CardDescription>User distribution across subscription plans</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={planDistribution}>
+              <BarChart data={data.planDistribution}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis dataKey="plan" className="text-muted-foreground" />
                 <YAxis className="text-muted-foreground" />
@@ -86,7 +86,7 @@ export function PlatformAnalytics() {
                     borderRadius: "8px",
                   }}
                 />
-                <Bar dataKey="users" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="users" fill="hsl(var(--chart-3))" />
               </BarChart>
             </ResponsiveContainer>
           </div>
