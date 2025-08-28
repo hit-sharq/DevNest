@@ -45,25 +45,25 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <h3 className="font-semibold text-foreground mb-3 sm:mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#" className="text-muted hover:text-foreground">
+                <Link href="#" className="text-muted hover:text-foreground transition-colors block py-1">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted hover:text-foreground">
+                <Link href="#" className="text-muted hover:text-foreground transition-colors block py-1">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted hover:text-foreground">
+                <Link href="#" className="text-muted hover:text-foreground transition-colors block py-1">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-muted hover:text-foreground">
+                <Link href="#" className="text-muted hover:text-foreground transition-colors block py-1">
                   Contact
                 </Link>
               </li>

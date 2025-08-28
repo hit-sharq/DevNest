@@ -46,17 +46,17 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="animate-slide-in-right border-border hover:shadow-lg transition-shadow">
-              <CardHeader>
+            <Card key={index} className="animate-slide-in-right border-border hover:shadow-lg transition-shadow h-full">
+              <CardHeader className="pb-4">
                 <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
                   <feature.icon className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="text-xl text-foreground">{feature.title}</CardTitle>
+                <CardTitle className="text-lg sm:text-xl text-foreground">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <CardDescription className="text-muted leading-relaxed">{feature.description}</CardDescription>
+              <CardContent className="pt-0">
+                <CardDescription className="text-muted leading-relaxed text-sm sm:text-base">{feature.description}</CardDescription>
               </CardContent>
             </Card>
           ))}

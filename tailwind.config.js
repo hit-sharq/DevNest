@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       screens: {
         'xs': '475px',
-        'sm': '640px',
+        'sm': '640px', 
         'md': '768px',
         'lg': '1024px',
         'xl': '1280px',
@@ -18,11 +18,19 @@ module.exports = {
         center: true,
         padding: {
           DEFAULT: '1rem',
-          sm: '2rem',
-          lg: '4rem',
-          xl: '5rem',
-          '2xl': '6rem',
+          xs: '1rem',
+          sm: '1.5rem',
+          md: '2rem',
+          lg: '3rem',
+          xl: '4rem',
+          '2xl': '5rem',
         },
+      },
+      spacing: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
       },
     },
   },

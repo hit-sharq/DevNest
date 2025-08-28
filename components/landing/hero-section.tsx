@@ -29,17 +29,17 @@ export function HeroSection() {
             </Button>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-muted">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-accent" />
+          <div className="flex flex-col xs:flex-row items-center justify-center gap-4 xs:gap-6 md:gap-8 text-sm text-muted px-4">
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              <Users className="w-4 h-4 text-accent flex-shrink-0" />
               <span>10,000+ Active Users</span>
             </div>
-            <div className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-accent" />
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              <BarChart3 className="w-4 h-4 text-accent flex-shrink-0" />
               <span>2M+ Followers Gained</span>
             </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-accent" />
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              <TrendingUp className="w-4 h-4 text-accent flex-shrink-0" />
               <span>95% Success Rate</span>
             </div>
           </div>
