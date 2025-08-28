@@ -12,11 +12,17 @@ import { Plus, Bot, Users, Shield, Activity } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface BotAccountStats {
-  totalAccounts: number
-  totalActionsToday: number
-  accountsByType: Array<{
-    accountType: string
-    _count: { id: number }
+  total: number
+  active: number
+  banned: number
+  byStatus: Record<string, number>
+  recentActivity: Array<{
+    id: string
+    username: string
+    status: string
+    currentUsage: number
+    dailyLimit: number
+    lastUsed: Date | null
   }>
 }
 
@@ -56,7 +62,7 @@ export function BotAccountsManagement() {
       const response = await fetch(`/api/admin/bot-accounts?${params}`)
       if (response.ok) {
         const data = await response.json()
-        setAccounts(data) // Assuming data is the array of accounts
+        setAccounts(data.accounts || []) // Use the accounts array from response
       } else {
         // Handle non-ok responses, e.g., 403 Forbidden, 404 Not Found
         console.error("Failed to fetch accounts:", response.status, response.statusText)
@@ -75,7 +81,7 @@ export function BotAccountsManagement() {
       const response = await fetch('/api/admin/bot-accounts/stats')
       if (response.ok) {
         const data = await response.json()
-        setStats(data) // Assuming data is the stats object
+        setStats(data.stats || null) // Use the stats object from response
       } else {
         console.error("Failed to fetch stats:", response.status, response.statusText)
         setStats(null) // Clear stats on error
@@ -178,8 +184,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Bot className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.totalAccounts}</p>
-                  <p className="text-xs text-muted-foreground">Active Bot Accounts</p>
+                  <p className="text-2xl font-bold">{stats.total}</p>
+                  <p className="text-xs text-muted-foreground">Total Bot Accounts</p>
                 </div>
               </div>
             </CardContent>
@@ -190,8 +196,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Activity className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">{stats.totalActionsToday}</p>
-                  <p className="text-xs text-muted-foreground">Actions Today</p>
+                  <p className="text-2xl font-bold">{stats.active}</p>
+                  <p className="text-xs text-muted-foreground">Active Accounts</p>
                 </div>
               </div>
             </CardContent>
@@ -202,11 +208,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Shield className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">
-                    {stats.accountsByType?.find((t: { accountType: string }) => t.accountType === "dedicated")?._count
-                      ?.id || 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Dedicated Bots</p>
+                  <p className="text-2xl font-bold">{stats.byStatus.active || 0}</p>
+                  <p className="text-xs text-muted-foreground">Active Status</p>
                 </div>
               </div>
             </CardContent>
@@ -217,11 +220,8 @@ export function BotAccountsManagement() {
               <div className="flex items-center">
                 <Users className="h-4 w-4 text-muted-foreground" />
                 <div className="ml-2">
-                  <p className="text-2xl font-bold">
-                    {stats.accountsByType?.find((t: { accountType: string }) => t.accountType === "user_contributed")
-                      ?._count?.id || 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground">User Contributed</p>
+                  <p className="text-2xl font-bold">{stats.banned}</p>
+                  <p className="text-xs text-muted-foreground">Banned Accounts</p>
                 </div>
               </div>
             </CardContent>
