@@ -1,0 +1,95 @@
+mpiling /api/admin/create-accounts ...
+ ✓ Compiled /api/admin/create-accounts in 777ms (171 modules)
+Create accounts fetch error: PrismaClientValidationError: 
+Invalid `prisma.botAccount.groupBy()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        id: true
+      }
+    },
+    status: true
+  },
+  by: [
+    "status"
+  ]
+  ~~~~~~~~~~
+}
+
+Invalid value for argument `by`. Expected BotAccountScalarFieldEnum.
+    at _n (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at ei.handleRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6926)
+    at ei.handleAndLogRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6608)
+    at ei.request (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6315)
+    at async a (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async GET (webpack-internal:///(rsc)/./app/api/admin/create-accounts/route.ts:25:23)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  clientVersion: '6.14.0'
+}
+ GET /api/admin/create-accounts 500 in 1720ms
+Create accounts fetch error: PrismaClientValidationError: 
+Invalid `prisma.botAccount.groupBy()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        id: true
+      }
+    },
+    status: true
+  },
+  by: [
+    "status"
+  ]
+  ~~~~~~~~~~
+}
+
+Invalid value for argument `by`. Expected BotAccountScalarFieldEnum.
+    at _n (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at ei.handleRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6926)
+    at ei.handleAndLogRequestError (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6608)
+    at ei.request (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:121:6315)
+    at async a (/home/joshua/joshua/DevNest/node_modules/@prisma/client/runtime/library.js:130:9551)
+    at async GET (webpack-internal:///(rsc)/./app/api/admin/create-accounts/route.ts:25:23)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228
+    at async eT.execute (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)
+    at async eT.handle (/home/joshua/joshua/DevNest/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)
+    at async doRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1366:42)
+    at async cacheEntry.responseCache.get.routeKind (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/base-server.js:818:17)
+    at async /home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/home/joshua/joshua/DevNest/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:179:21)
+    at async handleRequest (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:359:24)
+    at async requestHandlerImpl (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/router-server.js:383:13)
+    at async Server.requestListener (/home/joshua/joshua/DevNest/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  clientVersion: '6.14.0'
+}
+ GET /api/admin/create-accounts 500 in 423ms
+ POST /api/admin/create-accounts 400 in 1091ms
